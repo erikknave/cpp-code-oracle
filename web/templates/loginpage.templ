@@ -1,0 +1,55 @@
+package templates
+
+import "fmt"
+
+templ LoginPage(errorText string) {
+	@Layout() {
+		@LoginView(errorText)
+	}
+}
+
+templ LoginView(errorText string) {
+	<div id="page-container" hx-swap-oob="outerHTML">
+		<div class="text-white text-xs h-[100vh] max-w-[100vw] flex flex-col justify-center align-center bg-gray-800">
+			@LoginErrorTextDiv(errorText)
+			<div class="flex justify-center items-center  align-center px-4 py-2">
+				<div class="text-base pr-2 ">Login:</div>
+				@LoginInput()
+			</div>
+			<div class="flex justify-center items-center  align-center px-4 py-2	">
+				<a href="/signup" class="text-white">Create new demo user</a>
+			</div>
+		</div>
+	</div>
+}
+
+templ LoginInput() {
+	<input
+		type="text"
+		id="username"
+		name="username"
+		hx-post={ fmt.Sprintf("/login") }
+		hx-trigger="keyup[key=='Enter']"
+		class=" w-[20vw] p-2 border rounded border-white p-2 text-sm text-white bg-gray-800"
+		type="text"
+		hx-swap="outerHTML"
+		hx-push-url="/"
+		placeholder="Enter username.."
+		hx-indicator="#loader"
+	/>
+	<script type="text/javascript">
+    		document.getElementById("username").focus();
+			history.pushState(null, '', '/');	
+	</script>
+}
+
+templ LoginErrorTextDiv(errorText string) {
+	<div id="errortext-container" class="flex text-red-400 justify-center items-center  align-center px-4 py-2" hx-swap-oob="outerHTML">
+		{ errorText }
+	</div>
+}
+
+templ UpdatedLoginView(errorText string) {
+	@LoginInput()
+	@LoginErrorTextDiv(errorText)
+}

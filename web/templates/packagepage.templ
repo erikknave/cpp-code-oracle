@@ -1,0 +1,174 @@
+package templates
+
+import (
+	"fmt"
+	"github.com/erikknave/go-code-oracle/types"
+)
+
+templ PackagePage(result types.PackageQueryReponseResult) {
+	@Layout() {
+		@PackageView(result)
+	}
+}
+
+// func FormatRepoLastName(repoName string) string {
+// 	words := strings.Split(repoName, "/")
+// 	return words[len(words)-1]
+// }
+
+// func FormatIsoDateString(dateStr string) string {
+// 	if dateStr == "" {
+// 		return "No date available"
+// 	}
+// 	date, err := time.Parse(time.RFC3339, dateStr)
+// 	if err != nil {
+// 		return "Unformatted date: " + dateStr
+// 	}
+// 	formattadDate := FormatDateString(date)
+// 	return formattadDate
+// }
+templ packageNameSpan(packagePath string, count int, id string) {
+	if id != "" {
+		<p class="text-center" hx-boost="true">
+			<a href={ templ.URL(fmt.Sprintf("/package?user=test&dbid=%s", id)) }>
+				{ GetAfterSecondSlash(packagePath) } ({ fmt.Sprintf("%d",count ) })
+			</a>
+		</p>
+	}
+}
+
+templ PackageView(result types.PackageQueryReponseResult) {
+	<div id="page-container">
+		<div class="text-white text-xs h-[100vh] max-w-[100vw] flex flex-col justify-center align-center bg-gray-800">
+			<div class="  h-[90%] flex justify-center align-center px-4 py-2">
+				<div id="repo-container" class=" overflow-auto w-[97vw] border rounded border-white p-2">
+					<div class="flex w-full">
+						<div class="p-1 border w-[30vw] rounded border white">
+							<div>
+								<span class="font-bold">Name:</span> { result.Name }
+							</div>
+							<div>
+								<span class="font-bold">Import Path:</span> { result.ImportPath }
+							</div>
+							<div>
+								<span class="font-bold">Type:</span> Package
+							</div>
+							<div>
+								<span class="font-bold">Latest Package Authors:</span> { FormatAuthorString(result.Authors) }
+							</div>
+							<div>
+								<span class="font-bold">Latest Package Update:</span> { FormatIsoDateString(result.LatestUpdate) }
+							</div>
+						</div>
+						<div class="px-1"></div>
+						<div class="p-1 border w-[70vw] rounded border white">
+							<span class="font-bold">Summary: </span><md-span>{ result.ShortSummary }</md-span>
+						</div>
+					</div>
+					<div class="p-1"></div>
+					<div class="border rounded border-white p-1 h-[40vh] ">
+						<div class="pb-1">Dependencies to other packages</div>
+						<div class="flex align-center justify-center h-[35vh]">
+							<div class="w-[32vw] border rounded border-white">
+								<div class="flex flex-col justify-center h-full overflow-auto">
+									<div class="h-[35vh]">
+										for _, pkg := range result.IsUsingPackages {
+											@packageNameSpan(pkg.ImportPath, pkg.Count, pkg.Dbid)
+										}
+									</div>
+								</div>
+							</div>
+							<div class="w-[5vw] border-b border-white h-[50%]">
+								<div class="flex flex-col justify-end h-full">
+									<p class="text-center">Uses</p>
+								</div>
+							</div>
+							<div class="flex flex-col w-[15vw]">
+								<div class="border border-white text-center flex flex-col justify-center rounded h-[10vh] ">
+									<a href={ templ.URL(fmt.Sprintf("/repository?user=test&dbid=%s", result.RepoDbid)) }>{ GetAfterSecondSlash(result.RepoName) }</a>
+								</div>
+								<div class="w-[50%] border-r border-white h-[2vh]"></div>
+								<div class="border border-white flex flex-col justify-center text-center rounded h-[10vh]">
+									Current package:
+									<br/>
+									{ GetRelativePackagePath(result.RepoName,result.ImportPath) }
+								</div>
+							</div>
+							<div class="w-[5vw] border-b border-white h-[50%]">
+								<div class="flex flex-col justify-end h-full">
+									<p class="text-center">Uses</p>
+								</div>
+							</div>
+							<div class="w-[32vw] border h-full rounded border-white">
+								<div class="flex flex-col justify-center h-full  overflow-auto">
+									<div class="h-[35vh]">
+										for _, pkg := range result.IsUsedByPackages {
+											@packageNameSpan(pkg.ImportPath, pkg.Count, pkg.Dbid)
+										}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="p-1 "></div>
+					<div class="w-full ">
+						@SearchFilesPrompt(result.Dbid)
+					</div>
+					<div class="p-1 "></div>
+					<div class="p-1 border rounded border-white" hx-trigger="load" hx-post={ fmt.Sprintf("/perform-file-search?user=test&dbid=%s&type=package&agentType=packageAgent", result.Dbid) } id="search-files-container">
+						for _, file := range result.Files {
+							@fileResult(file.ImportPath, file.Summary, file.Dbid)
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+templ fileResult(importPath string, shortSummary string, dbid string) {
+	<div class="border-b">
+		<div>
+			<span class="font-bold">File:</span> <span class="underline"><a href={ templ.URL(fmt.Sprintf("/file?dbid=%s", dbid)) }>{ importPath }</a></span>
+		</div>
+		<div>
+			<span class="font-bold">Summary:</span> <md-span>{ shortSummary }</md-span>
+		</div>
+		<div class="p-1 "></div>
+	</div>
+}
+
+templ SearchFilesPrompt(dbid string) {
+	<input
+		type="text"
+		name="prompt"
+		id="prompt"
+		hx-post={ fmt.Sprintf("/perform-file-search?user=test&dbid=%s&type=package&agentType=packageAgent", dbid) }
+		hx-trigger="keyup[key=='Enter']"
+		class="  w-full border rounded border-white p-2 text-sm bg-gray-800 text-white"
+		type="text"
+		hx-swap="outerHTML"
+		placeholder="Search files.."
+		hx-indicator
+	/>
+	<script type="text/javascript">
+    		document.getElementById("prompt").focus();	
+	</script>
+}
+
+templ PackageViewWrapper(result types.PackageQueryReponseResult) {
+	<div id="page-container" hx-swap-oob="outerHTML">
+		@PackageView(result)
+	</div>
+}
+
+templ SearchFilesContainerWrapper(results []types.SearchableDocument, dbid string) {
+	<div id="search-files-container" hx-swap-oob="outerHTML">
+		<div class="p-1 border rounded border-white" id="search-files-container">
+			for _, pkg := range results {
+				@fileResult(pkg.Name, pkg.Summary, fmt.Sprintf("%d", pkg.Dbid))
+			}
+		</div>
+	</div>
+	@SearchFilesPrompt(dbid)
+}

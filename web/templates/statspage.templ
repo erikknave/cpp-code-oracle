@@ -1,0 +1,199 @@
+package templates
+
+import (
+	"fmt"
+	"github.com/erikknave/go-code-oracle/types"
+	"strings"
+)
+
+templ StatsPage(stats *types.Stats) {
+	@Layout() {
+		@StatsView(stats)
+	}
+}
+
+templ StatsViewWrapper(stats *types.Stats) {
+	<div id="page-container" hx-swap-oob="outerHTML">
+		@StatsView(stats)
+	</div>
+}
+
+func prettyPrintInt(n int) string {
+	// Convert the integer to a string
+	s := fmt.Sprintf("%d", n)
+
+	// Reverse the string for easier processing
+	reversed := reverse(s)
+
+	// Insert the apostrophes
+	var builder strings.Builder
+	for i, ch := range reversed {
+		if i > 0 && i%3 == 0 {
+			builder.WriteRune('\'')
+		}
+		builder.WriteRune(ch)
+	}
+
+	// Reverse the string back to the original order
+	return reverse(builder.String())
+}
+func reverse(s string) string {
+	runes := []rune(s)
+	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+		runes[i], runes[j] = runes[j], runes[i]
+	}
+	return string(runes)
+}
+
+templ StatsView(stats *types.Stats) {
+	<div id="page-container">
+		<div class="text-white text-xs h-[100vh] max-w-[100vw] flex flex-col justify-center align-center bg-gray-800">
+			<div class="h-full flex justify-center align-center px-4 py-2">
+				<div class=" w-[90vw]  flex flex-col justify-center align-center text-center ">
+					<div class="flex items-between justify-between">
+						<div class=" flex items-between justify-center">
+							<div class="min-w-[15rem]">
+								<div class="border border-white p-2 rounded ">
+									<div>
+										Documented Repositories
+									</div>
+									<div class="text-5xl">
+										{ prettyPrintInt(stats.Repositories) }
+									</div>
+								</div>
+								<div class="p-1"></div>
+								<div class="border border-white p-2 rounded ">
+									<div>
+										Documented Packages
+									</div>
+									<div class="text-5xl">
+										{ prettyPrintInt(stats.Packages) }
+									</div>
+								</div>
+								<div class="p-1"></div>
+								<div class="border border-white p-2 rounded ">
+									<div>
+										Documented Files
+									</div>
+									<div class="text-5xl">
+										{ prettyPrintInt(stats.Files) }
+									</div>
+								</div>
+								<div class="p-1"></div>
+								<div class="border border-white p-2 rounded ">
+									<div>
+										Documented Entities
+									</div>
+									<div class="text-5xl">
+										{ prettyPrintInt(stats.Entities) }
+									</div>
+									<div>Variables, functions, etc.</div>
+								</div>
+								<div class="p-1"></div>
+								<div class="border border-white p-2 rounded ">
+									<div>
+										Relationships
+									</div>
+									<div class="text-5xl">
+										{ prettyPrintInt(stats.Relationships) }
+									</div>
+								</div>
+								<div class="p-1"></div>
+							</div>
+							<div class="p-1"></div>
+							<div class="min-w-[15rem]">
+								<div class="border border-white p-2 rounded ">
+									<div>
+										Code updates
+									</div>
+									<div class="text-5xl">
+										{ prettyPrintInt(stats.FileCommits) }
+									</div>
+								</div>
+								<div class="p-1"></div>
+								<div class="border border-white p-2 rounded ">
+									<div>
+										Code Authors
+									</div>
+									<div class="text-5xl">
+										{ prettyPrintInt(stats.Authors) }
+									</div>
+								</div>
+								<div class="p-1"></div>
+							</div>
+						</div>
+						<div class=" w-full flex flex-col justify-between  items-between">
+							<div>
+								<div class="flex flex-col  px-8">
+									<div class="border border-white p-2 rounded ">
+										<div>
+											Most depended on repository
+										</div>
+										<div class="text-2xl">
+											<a href={ templ.URL(fmt.Sprintf("/repository?user=test&dbid=%s", stats.MostDependedOn.Dbid)) }>{ stats.MostDependedOn.Name }</a>
+										</div>
+										<div class="text-xs italic">
+											{ fmt.Sprintf("%d",stats.MostDependedOn.Count) } other repositories depend on this
+										</div>
+									</div>
+									<div class="p-1"></div>
+								</div>
+								<div class="flex flex-col px-8">
+									<div class="border border-white p-2 rounded ">
+										<div>
+											Repository with most other dependencies
+										</div>
+										<div class="text-2xl">
+											<a href={ templ.URL(fmt.Sprintf("/repository?user=test&dbid=%s", stats.MostDependencies.Dbid)) }>{ stats.MostDependencies.Name }</a>
+										</div>
+										<div class="text-xs italic">
+											{ fmt.Sprintf("%d",stats.MostDependencies.Count) } dependencies to other repos
+										</div>
+									</div>
+									<div class="p-1"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="  flex flex-col py-2">
+				<div class=" text-center p-2">Enter /help for commands</div>
+				@StatsPrompt()
+			</div>
+		</div>
+	</div>
+}
+
+templ StatsPrompt() {
+	// <style>
+	//         .htmx-indicator {
+	//             display: none
+	//         }
+	//         .htmx-indicator.htmx-request {
+	//             display: inline;
+	//         }
+	//         .htmx-indicator.htmx-request~textarea {
+	//             display: none;
+	//         }
+	//     </style>
+	// <div id="loader" class="htmx-indicator">Loading...</div>
+	<div class="w-[100vw] flex justify-center align-center pl-[4vw] pr-[7vw]">
+	
+		<input
+			type="text"
+			id="prompt"
+			name="prompt"
+			hx-post={ fmt.Sprintf("/send-command?user=test") }
+			hx-trigger="keyup[key=='Enter']"
+			class=" w-full p-2 border rounded border-white p-2 text-sm text-white bg-gray-800"
+			type="text"
+			hx-swap="outerHTML"
+			placeholder="Enter command.."
+			hx-indicator="#loader"
+		/>
+	</div>
+	<script type="text/javascript">
+    		document.getElementById("prompt").focus();	
+	</script>
+}

@@ -1,0 +1,20 @@
+package templates
+
+templ SearchPrompt() {
+	<input
+		type="text"
+		name="prompt"
+		id="prompt"
+		hx-post="/perform-search?user=test"
+		hx-trigger="keyup[key=='Enter']"
+		class="  w-[90vw] border rounded border-white p-2 text-sm bg-gray-800 text-white"
+		type="text"
+		hx-swap="outerHTML"
+		placeholder="Enter search.."
+		hx-indicator
+		hx-disabled-elt="this"
+	/>
+	<script type="text/javascript">
+    		document.getElementById("prompt").focus();	
+	</script>
+}

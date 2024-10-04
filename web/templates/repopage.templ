@@ -1,0 +1,150 @@
+package templates
+
+import (
+	"fmt"
+	"github.com/erikknave/go-code-oracle/types"
+)
+
+templ RepositoryPage(repoResult types.RepoQueryReponseResult) {
+	@Layout() {
+		@RepositoryView(repoResult)
+	}
+}
+
+templ RepoNameSpan(repoName string, count int, repoId string) {
+	<p class="text-center" hx-boost="true"><a href={ templ.URL(fmt.Sprintf("/repository?user=test&dbid=%s", repoId)) }>{ FormatRepoLastName(repoName) } ({ fmt.Sprintf("%d",count ) })</a></p>
+}
+
+templ RepositoryView(repoResult types.RepoQueryReponseResult) {
+	<div id="page-container">
+		<div class="text-white text-xs h-[100vh] max-w-[100vw] flex flex-col justify-center align-center bg-gray-800">
+			<div class="  h-[90%] flex justify-center align-center px-4 py-2">
+				<div id="repo-container" class=" overflow-auto w-[97vw] border rounded border-white p-2">
+					<div class="flex w-full">
+						<div class="p-1 border w-[30vw] rounded border white">
+							<div>
+								<span class="font-bold">Name:</span> { repoResult.Name }
+							</div>
+							<div>
+								<span class="font-bold">Type:</span> Repository
+							</div>
+							<div>
+								<span class="font-bold">Latest Authors:</span> { FormatAuthorString(repoResult.Authors) }
+							</div>
+							<div>
+								<span class="font-bold">Latest Update:</span> { FormatIsoDateString(repoResult.LatestUpdate) }
+							</div>
+						</div>
+						<div class="px-1"></div>
+						<div class="p-1 border w-[70vw] rounded border white">
+							<span class="font-bold">Summary: </span><md-span>{ repoResult.ShortSummary }</md-span>
+						</div>
+					</div>
+					<div class="p-1"></div>
+					<div class="border rounded border-white p-1 h-[40vh] ">
+						<div class="pb-1">Dependencies to other repositories</div>
+						<div class="flex align-center justify-center h-[35vh]">
+							<div class="w-[20vw] border rounded border-white">
+								<div class="flex flex-col justify-center h-full overflow-auto">
+									<div class="h-[35vh]">
+										for _, usedRepo := range repoResult.IsUsedByRepos {
+											@RepoNameSpan(usedRepo.Name, usedRepo.Count, usedRepo.Dbid)
+										}
+									</div>
+								</div>
+							</div>
+							<div class="w-[5vw] border-b border-white h-[50%]">
+								<div class="flex flex-col justify-end h-full">
+									<p class="text-center">Uses</p>
+								</div>
+							</div>
+							<div class="w-[20vw] border rounded border-white">
+								<div class="flex flex-col justify-center h-full">
+									<p class="text-center">{ FormatRepoLastName(repoResult.Name) }</p>
+								</div>
+							</div>
+							<div class="w-[5vw] border-b border-white h-[50%]">
+								<div class="flex flex-col justify-end h-full">
+									<p class="text-center">Uses</p>
+								</div>
+							</div>
+							<div class="w-[20vw] border h-full rounded border-white">
+								<div class="flex flex-col justify-center h-full  overflow-auto">
+									<div class="h-[35vh]">
+										for _, usedRepo := range repoResult.IsUsingRepos {
+											@RepoNameSpan(usedRepo.Name, usedRepo.Count, usedRepo.Dbid)
+										}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="p-1 "></div>
+					@SearchPackagesPrompt(repoResult.Dbid)
+					<div class="p-1 "></div>
+					<div
+						class="p-1 border rounded border-white"
+						hx-trigger="load"
+						hx-post={ fmt.Sprintf("/perform-package-search?dbid=%s&type=repository&agentType=repoAgent", repoResult.Dbid) }
+						id="search-packages-container"
+					>
+						for _, pkg := range repoResult.Packages {
+							@packageResult(pkg.ImportPath, pkg.ShortSummary, pkg.Dbid)
+						}
+					</div>
+					<div class="p-1 "></div>
+					<div class="p-1 border rounded border-white">
+						<md-block>{ repoResult.Summary }</md-block>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+templ packageResult(importPath string, shortSummary string, dbid string) {
+	<div class="border-b">
+		<div>
+			<span class="font-bold">Package:</span> <span class="underline"><a href={ templ.URL(fmt.Sprintf("/package?dbid=%s", dbid)) }>{ importPath }</a></span>
+		</div>
+		<div>
+			<span class="font-bold">Summary:</span> <md-span>{ shortSummary }</md-span>
+		</div>
+		<div class="p-1 "></div>
+	</div>
+}
+
+templ SearchPackagesPrompt(dbid string) {
+	<input
+		type="text"
+		name="prompt"
+		id="prompt"
+		hx-post={ fmt.Sprintf("/perform-package-search?dbid=%s&type=repository&agentType=repoAgent", dbid) }
+		hx-trigger="keyup[key=='Enter']"
+		class="  w-full border rounded border-white p-2 text-sm bg-gray-800 text-white"
+		type="text"
+		hx-swap="outerHTML"
+		placeholder="Search packages and files.."
+		hx-indicator
+	/>
+	<script type="text/javascript">
+    		document.getElementById("prompt").focus();	
+	</script>
+}
+
+templ RepositoryViewWrapper(repoResult types.RepoQueryReponseResult) {
+	<div id="page-container" hx-swap-oob="outerHTML">
+		@RepositoryView(repoResult)
+	</div>
+}
+
+templ SearchPackagesContainerWrapper(results []types.SearchableDocument, dbid string) {
+	<div id="search-packages-container" hx-swap-oob="outerHTML">
+		<div class="p-1 border rounded border-white" id="search-packages-container">
+			for _, pkg := range results {
+				@packageResult(pkg.Name, pkg.ShortSummary, fmt.Sprintf("%d", pkg.Dbid))
+			}
+		</div>
+	</div>
+	@SearchPackagesPrompt(dbid)
+}

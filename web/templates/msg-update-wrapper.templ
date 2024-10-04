@@ -1,0 +1,13 @@
+package templates
+
+import "github.com/erikknave/go-code-oracle/types"
+
+templ MsgUpdateWrapper(msg types.ChatMessage) {
+	<div id="message-container" hx-swap-oob="beforeend">
+		@ChatMessage(msg.Role, msg.Content)
+	</div>
+}
+
+templ MsgDeleteAllWrapper() {
+	<div id="message-container" hx-swap-oob="innerHTML"></div>
+}

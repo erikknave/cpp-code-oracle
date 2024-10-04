@@ -1,0 +1,11 @@
+package templates
+
+templ ChatMessage(role string, msg string) {
+	<div class="p-2 border border-white rounded">
+		<div><span class="font-bold">{ role }</span>:</div>
+		<md-block hmin="3">
+			{ msg }
+		</md-block>
+	</div>
+	<div class="p-1"></div>
+}

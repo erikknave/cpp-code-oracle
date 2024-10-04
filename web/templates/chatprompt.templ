@@ -1,0 +1,36 @@
+package templates
+
+import (
+	"fmt"
+	"github.com/erikknave/go-code-oracle/types"
+)
+
+templ ChatPrompt(agentType types.UserAgentType, searchDoc types.SearchableDocument) {
+	// <style>
+	//         .htmx-indicator {
+	//             display: none
+	//         }
+	//         .htmx-indicator.htmx-request {
+	//             display: inline;
+	//         }
+	//         .htmx-indicator.htmx-request~textarea {
+	//             display: none;
+	//         }
+	//     </style>
+	// <div id="loader" class="htmx-indicator">Loading...</div>
+	<textarea
+		type="text"
+		id="prompt"
+		name="prompt"
+		hx-post={ fmt.Sprintf("/send-message?agentType=%s&dbid=%d&type=%s", agentType.AgentType, searchDoc.Dbid, searchDoc.Type) }
+		hx-trigger="keyup[key=='Enter']"
+		class=" w-[90vw] border rounded border-white p-2 text-sm bg-gray-800 text-white"
+		type="text"
+		hx-swap="outerHTML"
+		placeholder="Enter prompt.."
+		hx-indicator="#loader"
+	></textarea>
+	<script type="text/javascript">
+    		document.getElementById("prompt").focus();	
+	</script>
+}

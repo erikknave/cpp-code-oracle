@@ -1,0 +1,180 @@
+package templates
+
+import (
+	"fmt"
+	"github.com/erikknave/go-code-oracle/types"
+)
+
+templ FilePage(result types.FileQueryReponseResult) {
+	@Layout() {
+		@FileView(result)
+	}
+}
+
+// func FormatRepoLastName(repoName string) string {
+// 	words := strings.Split(repoName, "/")
+// 	return words[len(words)-1]
+// }
+
+// func FormatIsoDateString(dateStr string) string {
+// 	if dateStr == "" {
+// 		return "No date available"
+// 	}
+// 	date, err := time.Parse(time.RFC3339, dateStr)
+// 	if err != nil {
+// 		return "Unformatted date: " + dateStr
+// 	}
+// 	formattadDate := FormatDateString(date)
+// 	return formattadDate
+// }
+
+// templ RepoNameSpan(repoName string, count int, repoId string) {
+// 	<p class="text-center" hx-boost="true"><a href={ templ.URL(fmt.Sprintf("/repository?user=test&dbid=%s", repoId)) }>{ FormatRepoLastName(repoName) } ({ fmt.Sprintf("%d",count ) })</a></p>
+// }
+templ FileView(result types.FileQueryReponseResult) {
+	<div id="page-container">
+		<div class="text-white text-xs h-[100vh] max-w-[100vw] flex flex-col justify-center align-center bg-gray-800">
+			<div class="  h-[90%] flex justify-center align-center px-4 py-2">
+				<div id="repo-container" class=" overflow-auto w-[97vw] border rounded border-white p-2">
+					<div class="flex w-full">
+						<div class="p-1 border w-[30vw] rounded border white">
+							<div>
+								<span class="font-bold">Name:</span> { result.Name }
+							</div>
+							<div>
+								<span class="font-bold">Import path:</span> { result.ImportPath }
+							</div>
+							<div>
+								<span class="font-bold">Type:</span> File
+							</div>
+							<div>
+								<span class="font-bold">Latest File Authors:</span> { FormatAuthorString(result.Authors) }
+							</div>
+							<div>
+								<span class="font-bold">Latest File Update:</span> { FormatIsoDateString(result.LatestUpdate) }
+							</div>
+						</div>
+						<div class="px-1"></div>
+						<div class="p-1 border w-[70vw] rounded border white">
+							<span class="font-bold">Summary: </span><md-span>{ result.Summary }</md-span>
+						</div>
+					</div>
+					<div class="p-1"></div>
+					<div class="border rounded border-white p-1 h-[40vh] ">
+						<div class="pb-1">Dependencies to other files</div>
+						<div class="flex align-center justify-center h-[35vh]">
+							<div class="w-[32vw] border rounded border-white">
+								<div class="flex flex-col justify-center h-full overflow-auto">
+									<div class="h-[35vh]">
+										for _, pkg := range result.IsUsingFiles {
+						
+											@packageNameSpan(pkg.ImportPath, pkg.Count, pkg.Dbid)
+										}
+									</div>
+								</div>
+							</div>
+							<div class="w-[5vw] border-b border-white h-[29vh]">
+								<div class="flex flex-col justify-end h-full">
+									<p class="text-center">Uses</p>
+								</div>
+							</div>
+							<div class="flex flex-col w-[15vw]">
+								<div class="border border-white text-center flex flex-col justify-center rounded h-[10vh] ">
+									<a href={ templ.URL(fmt.Sprintf("/repository?user=test&dbid=%s", result.RepoDbid)) }>{ GetAfterSecondSlash(result.RepoName) }</a>
+								</div>
+								<div class="w-[50%] border-r border-white h-[2vh]"></div>
+								<div class="border border-white text-center flex flex-col justify-center rounded h-[10vh] ">
+									<a href={ templ.URL(fmt.Sprintf("/package?user=test&dbid=%s", result.PackageDbid)) }>{ GetAfterSecondSlash(result.PackageImportPath) }</a>
+								</div>
+								<div class="w-[50%] border-r border-white h-[2vh]"></div>
+								<div class="border border-white flex flex-col justify-center text-center rounded h-[10vh]">
+									{ result.Name }
+								</div>
+							</div>
+							<div class="w-[5vw] border-b border-white h-[29vh]">
+								<div class="flex flex-col justify-end h-full">
+									<p class="text-center">Uses</p>
+								</div>
+							</div>
+							<div class="w-[32vw] border h-full rounded border-white">
+								<div class="flex flex-col justify-center h-full  overflow-auto">
+									<div class="h-[35vh]">
+										for _, pkg := range result.IsUsedByFiles {
+										
+											@fileNameSpan(pkg.ImportPath, pkg.Count, pkg.Dbid)
+										}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="p-1 "></div>
+					<div class="w-full ">
+						@SearchEntitiesPrompt(result.Dbid)
+					</div>
+					<div class="p-1 "></div>
+					<div class="p-1 border rounded border-white" hx-trigger="load" hx-post={ fmt.Sprintf("/perform-entity-search?dbid=%s&type=file&agentType=fileAgent", result.Dbid) } id="search-entities-container">
+						for _, pkg := range result.Entities {
+							@entityResult(pkg.Signature, pkg.Summary)
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+templ fileNameSpan(packagePath string, count int, id string) {
+	<p class="text-center" hx-boost="true">
+		<a href={ templ.URL(fmt.Sprintf("/file?user=test&dbid=%s", id)) }>
+			{ GetAfterSecondSlash(packagePath) } ({ fmt.Sprintf("%d",count ) })
+		</a>
+	</p>
+}
+
+templ entityResult(signature string, summary string) {
+	<div class="border-b">
+		<div>
+			<span class="font-bold">Signature:</span> <span class="underline">{ signature }</span>
+		</div>
+		<div>
+			<span class="font-bold">Summary:</span> <md-span>{ summary }</md-span>
+		</div>
+		<div class="p-1 "></div>
+	</div>
+}
+
+templ SearchEntitiesPrompt(dbid string) {
+	<input
+		type="text"
+		id="prompt"
+		name="prompt"
+		hx-post={ fmt.Sprintf("/perform-entity-search?dbid=%s&type=file&agentType=fileAgent", dbid) }
+		hx-trigger="keyup[key=='Enter']"
+		class="  w-full border rounded border-white p-2 text-sm bg-gray-800 text-white"
+		type="text"
+		hx-swap="outerHTML"
+		placeholder="Search.."
+		hx-indicator
+	/>
+	<script type="text/javascript">
+    		document.getElementById("prompt").focus();	
+	</script>
+}
+
+templ FileViewWrapper(result types.FileQueryReponseResult) {
+	<div id="page-container" hx-swap-oob="outerHTML">
+		@FileView(result)
+	</div>
+}
+
+templ SearchEntitiesContainerWrapper(results []types.SearchableDocument, dbid string) {
+	<div id="search-entities-container" hx-swap-oob="outerHTML">
+		<div class="p-1 border rounded border-white" id="search-entities-container">
+			for _, pkg := range results {
+				@entityResult(pkg.Name, pkg.Summary)
+			}
+		</div>
+	</div>
+	@SearchEntitiesPrompt(dbid)
+}

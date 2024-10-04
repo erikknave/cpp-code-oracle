@@ -1,0 +1,155 @@
+package templates
+
+import "fmt"
+
+templ HelpPage() {
+	@Layout() {
+		@HelpView()
+	}
+}
+
+templ HelpViewWrapper() {
+	<div id="page-container" hx-swap-oob="outerHTML">
+		@HelpView()
+	</div>
+}
+
+templ HelpView() {
+	<div id="page-container">
+		<div class="text-white text-xs h-[100vh] max-w-[100vw] flex flex-col justify-center align-center bg-gray-800">
+			<div class="h-full flex justify-center align-center px-4 py-2">
+				<div class=" w-[85vw]  flex flex-col justify-center align-center ">
+					<div class="flex h-[80vh] items-between text-xs justify-between border rounded border-white p-2">
+						<zero-md class="overflow-y-scroll w-full text-gray-800">
+							<script type="text/markdown">
+# List of commands
+
+### /help
+Brings up this text, regardless of screen.
+
+### /stats
+Brings up the Stats screen, regardless of screen.
+
+## Stats Screen (The start screen)
+
+### /search
+This will take you to the Search screen where you can perform key word or embeddings searches on the entire code base
+
+### /chat
+This will take you to the Chat screen where you can chat with all repositories
+
+## Search Screen
+
+### /repositories [search text]
+Performs a key word (’search engine’) search on all repositories in the code based and returns the most relevant packages (ordered by relevance). Note that this is the default command, so just entering search text will also result in a repository search.
+
+### /packages [search text]
+Performs a key word (’search engine’) search on all packages in the code base and returns the most relevant packages (ordered by relevance).
+
+### /files [search text]
+Performs a key word (’search engine’) search on all files in the code base and returns the most relevant files (ordered by relevance).
+
+### /entities [search text]
+Performs a key word (’search engine’) search on all functions and variables in the code base and returns and returns the most relevant variables and functions (ordered by relevance).
+
+### /all [search text]
+Performs a key word (’search engine’) search on the entire code base, regardless of whether it is a repository, a package, a file or a variable/function.
+
+### /embeddings [search text]
+Performs an embeddings search on all repositories in the code base. 
+
+### /embeddings packages [search text]
+Performs an embeddings search on all packages in the code base
+
+### /embeddings files [search text]
+Performs an embeddings search on all files in the code base
+
+### /clear
+Clears the search results
+
+### /chat
+This will take you to the Chat screen where you can chat with all repositories
+
+## Chat screen
+
+### /clear
+Clears the chat history
+
+### /chat
+Entering /chat while in the chat screen will clear the chat history and change to chatting with the default agent (The ‘Entire code base’ agent, where you can chat with all repositories).
+
+### /search
+This will take you to the Search screen where you can perform key word or embeddings searches on the entire code base
+
+## Repository screen
+Entering words into the prompt will perform a key word search on all packages in the current repository
+
+### /chat
+Will take you to the Chat screen where you can chat with an agent specialised in the current repository
+
+## Package screen
+Entering words into the prompt will perform a key word search on all files in the current package
+
+### /chat
+Will take you to the Chat screen where you can chat with an agent specialised in the current package
+
+## File screen
+Entering words into the prompt will perform a key word search on all functions and variables in the current file
+### /file
+
+Will take you to the Chat screen where you can chat with an agent specialised in the current file
+ 							 </script>
+							<template data-append>
+								<style>
+      .markdown-body {
+        background: #212936	; /* Tailwind bg-gray-800 */
+		font-size: 12px;
+        
+      }
+      h1, h2, h3, h4, h5, h6, p, a, li {
+        color: white;
+		background: #212936; /* Tailwind text-white */
+		
+      }
+    </style>
+							</template>
+						</zero-md>
+					</div>
+				</div>
+			</div>
+			<div class="  flex justify-center align-center px-4 py-2">
+				@HelpPrompt()
+			</div>
+		</div>
+	</div>
+}
+
+templ HelpPrompt() {
+	// <style>
+	//         .htmx-indicator {
+	//             display: none
+	//         }
+	//         .htmx-indicator.htmx-request {
+	//             display: inline;
+	//         }
+	//         .htmx-indicator.htmx-request~textarea {
+	//             display: none;
+	//         }
+	//     </style>
+	// <div id="loader" class="htmx-indicator">Loading...</div>
+	<input
+		type="text"
+		id="prompt"
+		name="prompt"
+		hx-post={ fmt.Sprintf("/send-command?user=test") }
+		hx-trigger="keyup[key=='Enter']"
+		class=" w-[85vw] border rounded border-white p-2 text-sm text-white bg-gray-800"
+		type="text"
+		hx-swap="outerHTML"
+		placeholder="Enter command.."
+		hx-indicator="#loader"
+	/>
+	<script type="text/javascript">
+    		document.getElementById("prompt").focus();	
+	</script>
+}

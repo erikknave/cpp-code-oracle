@@ -1,0 +1,93 @@
+package templates
+
+import (
+	"fmt"
+	"github.com/erikknave/go-code-oracle/types"
+)
+
+templ ChatPage(messages []types.ChatMessage, agentType types.UserAgentType, searchDoc types.SearchableDocument) {
+	@Layout() {
+		@ChatView(messages, agentType, searchDoc)
+	}
+}
+
+func chatViewHeadline(agentType types.UserAgentType, searchDoc types.SearchableDocument) string {
+	typeStr := agentType.AgentType
+	switch typeStr {
+	case "codeBaseAgent":
+		return "Chat scope: All indexed repositories"
+	case "repoAgent":
+		return fmt.Sprintf("Chat scope: Repository %s", searchDoc.Name)
+	case "packageAgent":
+		return fmt.Sprintf("Chat scope: Package %s", searchDoc.Name)
+	case "fileAgent":
+		return fmt.Sprintf("Chat scope: File %s", searchDoc.Name)
+	default:
+		return "Chat scope not known (probably an error has occurred)"
+	}
+}
+
+func getScopeTypeString(agentType types.UserAgentType) string {
+	typeStr := agentType.AgentType
+	switch typeStr {
+	case "codeBaseAgent":
+		return "All indexed repositories"
+	case "repoAgent":
+		return fmt.Sprintf("Repository")
+	case "packageAgent":
+		return fmt.Sprintf("Package")
+	case "fileAgent":
+		return fmt.Sprintf("File")
+	default:
+		return "Chat scope not known (probably an error occurred)"
+	}
+}
+
+func getHrefString(agentType types.UserAgentType, searchDoc types.SearchableDocument) string {
+	typeStr := agentType.AgentType
+	switch typeStr {
+	case "codeBaseAgent":
+		return ""
+	case "repoAgent":
+		return fmt.Sprintf("/repository?user=test&dbid=%d", searchDoc.Dbid)
+	case "packageAgent":
+		return fmt.Sprintf("/package?user=test&dbid=%d", searchDoc.Dbid)
+	case "fileAgent":
+		return fmt.Sprintf("/file?user=test&dbid=%d", searchDoc.Dbid)
+	default:
+		return "/error"
+	}
+}
+
+templ chatHeader(agentType types.UserAgentType, searchDoc types.SearchableDocument) {
+	<div class="flex flex-col items-center justify-center p-2">
+		<div>Chat scope: { getScopeTypeString(agentType) }</div>
+		<a href={ templ.URL(getHrefString(agentType, searchDoc)) }>{ searchDoc.Name }</a>
+	</div>
+}
+
+templ ChatView(messages []types.ChatMessage, agentType types.UserAgentType, searchDoc types.SearchableDocument) {
+	<div id="page-container">
+		<div class="text-white text-xs h-[100vh] max-w-[100vw] flex flex-col justify-center align-center bg-gray-800">
+			<div class=" h-full flex justify-center align-center px-4 py-2">
+				<div class=" w-[90vw] h-[85vh] flex flex-col justify-between align-center ">
+					@chatHeader(agentType, searchDoc)
+					<div id="message-container" hx-ext="ws" ws-connect="/ws/message?user=test" class=" overflow-auto w-[90vw] border h-full rounded border-white p-2">
+						for _, message := range messages {
+							@ChatMessage(message.Role, message.Content)
+						}
+					</div>
+				</div>
+			</div>
+			<div class=" h-[15%] flex justify-center align-center px-4 py-2">
+				@ChatPrompt(agentType, searchDoc)
+			</div>
+		</div>
+	</div>
+}
+
+templ ChatViewWrapper(messages []types.ChatMessage, agentType types.UserAgentType, searchDoc types.SearchableDocument) {
+	<div id="page-container" hx-swap-oob="outerHTML">
+		@ChatView(messages, agentType, searchDoc)
+	</div>
+}
