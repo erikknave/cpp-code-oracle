@@ -1,0 +1,2 @@
+match (r:REPOSITORY)<-[:IS_PART_OF]-(d:DIRECTORY)<-[:IS_LOCATED_IN]-(f:FILE)<-[:IS_DEFINED_IN]-(cd:CODEBLOCK)-[:calls|has_type]->(cd2:CODEBLOCK)-[:IS_DEFINED_IN]->(f2:FILE)-[:IS_LOCATED_IN]->(d2:DIRECTORY)-[:IS_PART_OF]->(r2:REPOSITORY) 
+return r,d,f,cd,cd2,f2,d2,r2 limit 50

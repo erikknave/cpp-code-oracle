@@ -16,7 +16,7 @@ func Init() {
 		Host: os.Getenv("MEILI_URL"), // Replace with your Meilisearch host
 	})
 
-	indexName := "documents"
+	indexName := "searchable_documents"
 
 	// Create the index
 	// _, err := Client.CreateIndex(&meilisearch.IndexConfig{
@@ -29,7 +29,7 @@ func Init() {
 	Index = Client.Index(indexName)
 
 	// Update filterable attributes only if necessary
-	_, err := Index.UpdateFilterableAttributes(&[]string{"type", "dbid", "repository_id", "package_id", "file_id", "name"})
+	_, err := Index.UpdateFilterableAttributes(&[]string{"doc_type", "dbid", "repository_id", "directory_id", "file_id", "name"})
 	if err != nil {
 		log.Fatalf("Error setting filterable attributes: %v", err)
 	}

@@ -146,13 +146,12 @@ type ListFilesResponseResult struct {
 }
 
 type Stats struct {
-	Repositories     int                 `json:"repositories"`
-	Modules          int                 `json:"modules"`
-	Packages         int                 `json:"packages"`
-	Files            int                 `json:"files"`
-	Entities         int                 `json:"entities"`
-	FileCommits      int                 `json:"fileCommits"`
-	Authors          int                 `json:"authors"`
+	Repositories int `json:"repositories"`
+	Directories  int `json:"directories"`
+	Files        int `json:"files"`
+	Codeblocks   int `json:"codeblocks"`
+	// FileCommits      int                 `json:"fileCommits"`
+	// Authors          int                 `json:"authors"`
 	Relationships    int                 `json:"relationships"`
 	MostDependedOn   StatsRepositoryInfo `json:"mostDependedOn"`
 	MostDependencies StatsRepositoryInfo `json:"mostDependencies"`
