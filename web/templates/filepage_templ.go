@@ -355,33 +355,33 @@ func entityResult(signature string, name string, codeblockType string) templ.Com
 			templ_7745c5c3_Var19 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"border-b\"><div><span class=\"font-bold\">Signature:</span> <span class=\"underline\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"border-b\"><div><span class=\"font-bold\">Name:</span> <md-span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var20 string
 		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/filepage.templ`, Line: 136, Col: 75}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/filepage.templ`, Line: 136, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></div><div><span class=\"font-bold\">Name:</span> <md-span>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</md-span></div><div><span class=\"font-bold\">Signature:</span> <span class=\"underline\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var21 string
 		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(signature)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/filepage.templ`, Line: 139, Col: 60}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/filepage.templ`, Line: 139, Col: 80}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</md-span></div><div><span class=\"font-bold\">Type:</span> <md-span>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></div><div><span class=\"font-bold\">Type:</span> <md-span>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
