@@ -2,6 +2,7 @@ package cypherqueries
 
 import (
 	"bytes"
+	_ "embed"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -12,48 +13,8 @@ import (
 	"github.com/gofiber/fiber/v3/log"
 )
 
-const fileQueryTemplate = `
-// Query 1: Matching and collecting repositories using or being used by the repository with dbid "{{.DBID}}"
-OPTIONAL MATCH (r1:Repository )-[:HAS_MODULE]->(m1:Module)<-[:PART_OF_MODULE]-(p1:Package )-[:CONTAINS]->(f1:File {dbid: "{{.DBID}}"})-[:DEFINES]->(e1:Entity)-[:USES]->(e2:Entity)<-[:DEFINES]-(f2:File)<-[:CONTAINS]-(p2:Package)-[:PART_OF_MODULE]->(m2:Module)<-[:HAS_MODULE]-(r2:Repository)
-WHERE f2.dbid <> "{{.DBID}}" and f2.name <> "NON_EXISTING_FILE.go"
-WITH f2, p2, r2, COUNT(*) AS f2_count
-ORDER BY f2_count DESC
-WITH COLLECT(DISTINCT {name: f2.name, dbid: f2.dbid, importpath: f2.repoPath, reponame: r2.name, repodbid: r2.dbid, count: f2_count}) AS is_used_by_files
-
-// Query 2: Matching repositories using the file with dbid "{{.DBID}}"
-OPTIONAL MATCH (r3:Repository)-[:HAS_MODULE]->(m3:Module)<-[:PART_OF_MODULE]-(p3:Package)-[:CONTAINS]->(f3:File)-[:DEFINES]->(e3:Entity)-[:USES]->(e4:Entity)<-[:DEFINES]-(f4:File {dbid: "{{.DBID}}"})<-[:CONTAINS]-(p4:Package)-[:PART_OF_MODULE]->(m4:Module)<-[:HAS_MODULE]-(r4:Repository )
-WHERE f3.dbid <> "{{.DBID}}" and f3.name <> "NON_EXISTING_FILE.go"
-WITH is_used_by_files, f3, p3, r3, COUNT(*) AS f3_count
-ORDER BY f3_count DESC
-WITH is_used_by_files, COLLECT(DISTINCT {name: f3.name, dbid: f3.dbid, importpath: f3.repoPath, reponame: r3.name, repodbid: r3.dbid, count: f3_count}) AS is_using_files
-
-// Query 3: Matching packages and entities of the repository with dbid "{{.DBID}}"
-OPTIONAL MATCH (r:Repository )-[:HAS_MODULE]->(m:Module)-[:PART_OF_MODULE]-(p:Package)-[:CONTAINS]-(f:File {dbid: "{{.DBID}}"})-[:DEFINES]-(e:Entity)
-WITH is_used_by_files, is_using_files, f, p, r, COLLECT({name: e.name, summary: e.summary, signature: e.signature, dbid: e.dbid}) AS entities
-
-// Query 4: Matching file commits affecting the repository with dbid "{{.DBID}}"
-OPTIONAL MATCH (r)-[:HAS_MODULE]->(m:Module)-[:PART_OF_MODULE]-(p)-[:CONTAINS]-(f)-[:AFFECTS]-(fc:FileCommit)
-WITH is_used_by_files, is_using_files, entities, r, f, p, COLLECT(DISTINCT fc.authorName) AS authors, MAX(fc.commitDate) AS latestUpdate
-
-// Combining all results
-RETURN {
-    is_used_by_files: is_used_by_files,
-    is_using_files: is_using_files,
-    name: f.name,
-    summary: f.summary,
-    authors: authors,
-    latestUpdate: latestUpdate,
-    entities: entities,
-    dbid: f.dbid,
-    repodbid: r.dbid,
-    reponame: r.name,
-	packagedbid: p.dbid,
-	packageimportpath: p.repoPath,
-    importpath: f.repoPath
-} AS result
-
-
-`
+//go:embed file-query.cql
+var fileQueryTemplate string
 
 func PerformFileCypherQuery(dbid string) (types.FileQueryReponseResult, error) {
 	dbidStr := fmt.Sprintf("%s", dbid) // The arbitrary value to replace "47"

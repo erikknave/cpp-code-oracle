@@ -83,7 +83,7 @@ templ FileView(result types.FileQueryReponseResult) {
 								</div>
 								<div class="w-[50%] border-r border-white h-[2vh]"></div>
 								<div class="border border-white text-center flex flex-col justify-center rounded h-[10vh] ">
-									<a href={ templ.URL(fmt.Sprintf("/package?user=test&dbid=%d", result.PackageDbid)) }>{ GetAfterSecondSlash(result.PackageImportPath) }</a>
+									<a href={ templ.URL(fmt.Sprintf("/package?user=test&dbid=%d", result.DirectoryDbid)) }>{ GetAfterSecondSlash(result.DirectoryName) }</a>
 								</div>
 								<div class="w-[50%] border-r border-white h-[2vh]"></div>
 								<div class="border border-white flex flex-col justify-center text-center rounded h-[10vh]">
@@ -111,9 +111,9 @@ templ FileView(result types.FileQueryReponseResult) {
 						@SearchEntitiesPrompt(result.Dbid)
 					</div>
 					<div class="p-1 "></div>
-					<div class="p-1 border rounded border-white" hx-trigger="load" hx-post={ fmt.Sprintf("/perform-entity-search?dbid=%d&type=file&agentType=fileAgent", result.Dbid) } id="search-entities-container">
-						for _, pkg := range result.Entities {
-							@entityResult(pkg.Signature, pkg.Summary)
+					<div class="p-1 border rounded border-white" hx-post={ fmt.Sprintf("/perform-entity-search?dbid=%d&type=file&agentType=fileAgent", result.Dbid) } id="search-entities-container">
+						for _, pkg := range result.Codeblocks {
+							@entityResult(pkg.Signature, pkg.Name, pkg.EntityType)
 						}
 					</div>
 				</div>
@@ -130,13 +130,16 @@ templ fileNameSpan(packagePath string, count int, id int) {
 	</p>
 }
 
-templ entityResult(signature string, summary string) {
+templ entityResult(signature string, name string, codeblockType string) {
 	<div class="border-b">
 		<div>
-			<span class="font-bold">Signature:</span> <span class="underline">{ signature }</span>
+			<span class="font-bold">Signature:</span> <span class="underline">{ name }</span>
 		</div>
 		<div>
-			<span class="font-bold">Summary:</span> <md-span>{ summary }</md-span>
+			<span class="font-bold">Name:</span> <md-span>{ signature }</md-span>
+		</div>
+		<div>
+			<span class="font-bold">Type:</span> <md-span>{ codeblockType }</md-span>
 		</div>
 		<div class="p-1 "></div>
 	</div>
@@ -170,7 +173,7 @@ templ SearchEntitiesContainerWrapper(results []types.SearchableDocument, dbid in
 	<div id="search-entities-container" hx-swap-oob="outerHTML">
 		<div class="p-1 border rounded border-white" id="search-entities-container">
 			for _, pkg := range results {
-				@entityResult(pkg.Name, pkg.Summary)
+				@entityResult(pkg.Signature, pkg.Name, pkg.Type)
 			}
 		</div>
 	</div>

@@ -71,7 +71,10 @@ func GetRelativePackagePath(repoPath, packagePath string) (string, error) {
 func GetAfterSecondSlash(path string) string {
 	parts := strings.SplitN(path, "/", 3)
 	if len(parts) < 3 {
-		return "Unknown"
+		if len(path) == 0 {
+			return "/"
+		}
+		return path
 	}
 	return parts[2]
 }

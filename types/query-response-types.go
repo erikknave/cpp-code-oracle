@@ -68,27 +68,28 @@ type FileQueryResponseFile struct {
 	RepoName   string `json:"reponame"`
 }
 
-type FileQueryResponseEntity struct {
-	Name      string `json:"name"`
-	Summary   string `json:"summary"`
-	Signature string `json:"signature"`
-	Dbid      int    `json:"dbid"`
+type FileQueryResponseCodeblock struct {
+	Name       string `json:"name"`
+	Summary    string `json:"summary"`
+	Signature  string `json:"signature"`
+	EntityType string `json:"entitytype"`
+	Dbid       int    `json:"dbid"`
 }
 
 type FileQueryReponseResult struct {
-	IsUsedByFiles     []FileQueryResponseFile   `json:"is_used_by_files"`
-	IsUsingFiles      []FileQueryResponseFile   `json:"is_using_files"`
-	Name              string                    `json:"name"`
-	Summary           string                    `json:"summary"`
-	Entities          []FileQueryResponseEntity `json:"entities"`
-	Authors           []string                  `json:"authors"`
-	LatestUpdate      string                    `json:"latestUpdate"`
-	Dbid              int                       `json:"dbid"`
-	RepoDbid          int                       `json:"repodbid"`
-	RepoName          string                    `json:"reponame"`
-	ImportPath        string                    `json:"importpath"`
-	PackageDbid       int                       `json:"packagedbid"`
-	PackageImportPath string                    `json:"packageimportpath"`
+	IsUsedByFiles []FileQueryResponseFile      `json:"is_used_by_files"`
+	IsUsingFiles  []FileQueryResponseFile      `json:"is_using_files"`
+	Name          string                       `json:"name"`
+	Summary       string                       `json:"summary"`
+	Codeblocks    []FileQueryResponseCodeblock `json:"codeblocks"`
+	Authors       []string                     `json:"authors"`
+	LatestUpdate  string                       `json:"latestUpdate"`
+	Dbid          int                          `json:"dbid"`
+	RepoDbid      int                          `json:"repodbid"`
+	RepoName      string                       `json:"reponame"`
+	ImportPath    string                       `json:"importpath"`
+	DirectoryDbid int                          `json:"directorydbid"`
+	DirectoryName string                       `json:"directoryname"`
 }
 
 type EntityQueryResponseEntity struct {
