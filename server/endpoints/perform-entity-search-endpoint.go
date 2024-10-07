@@ -3,6 +3,8 @@ package endpoints
 import (
 	"context"
 	"fmt"
+	"log"
+	"strconv"
 
 	"github.com/erikknave/go-code-oracle/dbhelpers"
 	"github.com/erikknave/go-code-oracle/search"
@@ -16,6 +18,7 @@ func PerformEntitySearchEndPoint(c *fiber.Ctx) error {
 	ctx := context.Background()
 	promptStr := c.FormValue("prompt")
 	dbidStr := c.Query("dbid")
+	dbid := convertDbid(dbidStr)
 	userInterface := c.Locals("user")
 	user := userInterface.(types.User)
 	if promptStr == "/help" {
@@ -35,14 +38,23 @@ func PerformEntitySearchEndPoint(c *fiber.Ctx) error {
 		searchResults, err := search.SearchEntities("", dbidStr, 50)
 		if err != nil {
 			fmt.Printf("Error performing search: %v", err)
-			return webhelpers.RenderHttpComponent(templates.SearchEntitiesContainerWrapper(searchResults, dbidStr), c, ctx)
+
+			return webhelpers.RenderHttpComponent(templates.SearchEntitiesContainerWrapper(searchResults, dbid), c, ctx)
 		}
-		return webhelpers.RenderHttpComponent(templates.SearchEntitiesContainerWrapper(searchResults, dbidStr), c, ctx)
+		return webhelpers.RenderHttpComponent(templates.SearchEntitiesContainerWrapper(searchResults, dbid), c, ctx)
 	}
 	searchResults, err := search.SearchEntities(promptStr, dbidStr, 20)
 	if err != nil {
 		fmt.Printf("Error performing search: %v", err)
-		return webhelpers.RenderHttpComponent(templates.SearchEntitiesContainerWrapper(searchResults, dbidStr), c, ctx)
+		return webhelpers.RenderHttpComponent(templates.SearchEntitiesContainerWrapper(searchResults, dbid), c, ctx)
 	}
-	return webhelpers.RenderHttpComponent(templates.SearchEntitiesContainerWrapper(searchResults, dbidStr), c, ctx)
+	return webhelpers.RenderHttpComponent(templates.SearchEntitiesContainerWrapper(searchResults, dbid), c, ctx)
+}
+
+func convertDbid(dbidStr string) int {
+	dbid, err := strconv.Atoi(dbidStr)
+	if err != nil {
+		log.Fatalf("Error converting dbidStr to int: %v", err)
+	}
+	return dbid
 }

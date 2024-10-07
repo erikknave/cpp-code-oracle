@@ -41,7 +41,7 @@ func (a *Agent) Init(messageHistory []types.ChatMessage, u *types.User, dbid int
 		deepsummaryfc.CreateNewFunctionCall(c),
 		listfilesforsearchidfc.CreateNewFunctionCall(c),
 	}
-	endResult, err := cypherqueries.PerformPackageCypherQuery(fmt.Sprintf("%d", dbid))
+	endResult, err := cypherqueries.PerformDirectoryCypherQuery(fmt.Sprintf("%d", dbid))
 	if err != nil {
 		fmt.Printf("%s: Error executing cypher query when creating system message\n", NAME)
 	}

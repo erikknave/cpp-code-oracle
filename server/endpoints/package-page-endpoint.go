@@ -29,11 +29,11 @@ func PackagePageEndPoint(c *fiber.Ctx) error {
 
 	// }
 	// chatMessages, _ := dbhelpers.LoadChatMessagesForUser(&user)
-	packageResult, err := cypherqueries.PerformPackageCypherQuery(fmt.Sprintf("%d", dbid))
+	packageResult, err := cypherqueries.PerformDirectoryCypherQuery(fmt.Sprintf("%d", dbid))
 	if err != nil {
 		fmt.Printf("Error performing repo query: %v", err)
 		return c.SendStatus(500)
 	}
-	repositoryView := templates.PackagePage(packageResult)
+	repositoryView := templates.DirectoryPage(packageResult)
 	return webhelpers.RenderHttpComponent(repositoryView, c, ctx)
 }

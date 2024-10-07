@@ -17,6 +17,7 @@ func PerformFileSearchEndPoint(c *fiber.Ctx) error {
 	user := c.Locals("user").(types.User)
 	promptStr := c.FormValue("prompt")
 	dbidStr := c.Query("dbid")
+	dbid := convertDbid(dbidStr)
 	if promptStr == "/help" {
 		return HelpViewWrapperEndPoint(c)
 	}
@@ -35,17 +36,17 @@ func PerformFileSearchEndPoint(c *fiber.Ctx) error {
 		if err != nil {
 			fmt.Printf("Error performing search: %v", err)
 			// dbhelpers.SetUserSearchResults(&user, []types.SearchableDocument{})
-			return webhelpers.RenderHttpComponent(templates.SearchFilesContainerWrapper(searchResults, dbidStr), c, ctx)
+			return webhelpers.RenderHttpComponent(templates.SearchFilesContainerWrapper(searchResults, dbid), c, ctx)
 		}
 		// dbhelpers.SetUserSearchResults(&user, searchResults)
-		return webhelpers.RenderHttpComponent(templates.SearchFilesContainerWrapper(searchResults, dbidStr), c, ctx)
+		return webhelpers.RenderHttpComponent(templates.SearchFilesContainerWrapper(searchResults, dbid), c, ctx)
 	}
 	searchResults, err := search.SearchFiles(promptStr, dbidStr, 20)
 	if err != nil {
 		fmt.Printf("Error performing search: %v", err)
 		// dbhelpers.SetUserSearchResults(&user, []types.SearchableDocument{})
-		return webhelpers.RenderHttpComponent(templates.SearchFilesContainerWrapper(searchResults, dbidStr), c, ctx)
+		return webhelpers.RenderHttpComponent(templates.SearchFilesContainerWrapper(searchResults, dbid), c, ctx)
 	}
 	// dbhelpers.SetUserSearchResults(&user, searchResults)
-	return webhelpers.RenderHttpComponent(templates.SearchFilesContainerWrapper(searchResults, dbidStr), c, ctx)
+	return webhelpers.RenderHttpComponent(templates.SearchFilesContainerWrapper(searchResults, dbid), c, ctx)
 }

@@ -88,12 +88,12 @@ Summary: {{ .Summary }}
 `
 
 func (f *FunctionCall) Function(packageSearchId string) string {
-	requestedType := search.GetTypeFromSearchId(fmt.Sprintf("%s", packageSearchId))
+	requestedType := search.GetTypeFromSearchId(fmt.Sprintf("%v", packageSearchId))
 	if requestedType != "package" {
 		return "The dbid provided does not correspond to a package, but to a " + requestedType
 	}
-	packageDbid := search.GetDbidFromSearchId(fmt.Sprintf("%s", packageSearchId))
-	repoResult, err := cypherqueries.PerformPackageCypherQuery(packageDbid)
+	packageDbid := search.GetDbidFromSearchId(fmt.Sprintf("%v", packageSearchId))
+	repoResult, err := cypherqueries.PerformDirectoryCypherQuery(packageDbid)
 	if err != nil {
 		return "An neo4j error occurred while performing the query: " + err.Error()
 	}

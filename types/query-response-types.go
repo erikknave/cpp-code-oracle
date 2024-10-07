@@ -26,41 +26,41 @@ type RepoQueryReponseResult struct {
 	Dbid          int                           `json:"dbid"`
 }
 
-type PackageQueryResponsePackage struct {
+type DirectoryQueryResponseDirectory struct {
 	Name         string `json:"name"`
-	Dbid         string `json:"dbid"`
+	Dbid         int    `json:"dbid"`
 	Count        int    `json:"count"`
 	ShortSummary string `json:"shortsummary"`
 	ImportPath   string `json:"importpath"`
-	RepoDbid     string `json:"repodbid"`
+	RepoDbid     int    `json:"repodbid"`
 	RepoName     string `json:"reponame"`
 }
 
-type PackageQueryResponseFile struct {
+type DirectoryQueryResponseFile struct {
 	Name       string `json:"name"`
 	Summary    string `json:"summary"`
 	ImportPath string `json:"importpath"`
-	Dbid       string `json:"dbid"`
+	Dbid       int    `json:"dbid"`
 }
 
-type PackageQueryReponseResult struct {
-	IsUsedByPackages []PackageQueryResponsePackage `json:"is_used_by_packages"`
-	IsUsingPackages  []PackageQueryResponsePackage `json:"is_using_packages"`
-	Name             string                        `json:"name"`
-	ShortSummary     string                        `json:"shortsummary"`
-	Summary          string                        `json:"summary"`
-	Files            []PackageQueryResponseFile    `json:"files"`
-	Authors          []string                      `json:"authors"`
-	LatestUpdate     string                        `json:"latestUpdate"`
-	Dbid             string                        `json:"dbid"`
-	RepoDbid         string                        `json:"repodbid"`
-	RepoName         string                        `json:"reponame"`
-	ImportPath       string                        `json:"importpath"`
+type DirectoryQueryReponseResult struct {
+	IsUsedByDirectories []DirectoryQueryResponseDirectory `json:"is_used_by_directories"`
+	IsUsingDirectories  []DirectoryQueryResponseDirectory `json:"is_using_directories"`
+	Name                string                            `json:"name"`
+	ShortSummary        string                            `json:"shortsummary"`
+	Summary             string                            `json:"summary"`
+	Files               []DirectoryQueryResponseFile      `json:"files"`
+	Authors             []string                          `json:"authors"`
+	LatestUpdate        string                            `json:"latestUpdate"`
+	Dbid                int                               `json:"dbid"`
+	RepoDbid            int                               `json:"repodbid"`
+	RepoName            string                            `json:"reponame"`
+	ImportPath          string                            `json:"importpath"`
 }
 
 type FileQueryResponseFile struct {
 	Name       string `json:"name"`
-	Dbid       string `json:"dbid"`
+	Dbid       int    `json:"dbid"`
 	Count      int    `json:"count"`
 	Summary    string `json:"summary"`
 	ImportPath string `json:"importpath"`
@@ -72,7 +72,7 @@ type FileQueryResponseEntity struct {
 	Name      string `json:"name"`
 	Summary   string `json:"summary"`
 	Signature string `json:"signature"`
-	Dbid      string `json:"dbid"`
+	Dbid      int    `json:"dbid"`
 }
 
 type FileQueryReponseResult struct {
@@ -83,20 +83,20 @@ type FileQueryReponseResult struct {
 	Entities          []FileQueryResponseEntity `json:"entities"`
 	Authors           []string                  `json:"authors"`
 	LatestUpdate      string                    `json:"latestUpdate"`
-	Dbid              string                    `json:"dbid"`
-	RepoDbid          string                    `json:"repodbid"`
+	Dbid              int                       `json:"dbid"`
+	RepoDbid          int                       `json:"repodbid"`
 	RepoName          string                    `json:"reponame"`
 	ImportPath        string                    `json:"importpath"`
-	PackageDbid       string                    `json:"packagedbid"`
+	PackageDbid       int                       `json:"packagedbid"`
 	PackageImportPath string                    `json:"packageimportpath"`
 }
 
 type EntityQueryResponseEntity struct {
 	Name      string `json:"name"`
-	Dbid      string `json:"dbid"`
+	Dbid      int    `json:"dbid"`
 	Count     int    `json:"count"`
 	Signature string `json:"signature"`
-	RepoDbid  string `json:"repodbid"`
+	RepoDbid  int    `json:"repodbid"`
 	RepoName  string `json:"reponame"`
 }
 
@@ -104,7 +104,7 @@ type EntityQueryResponseFile struct {
 	Name      string `json:"name"`
 	Summary   string `json:"summary"`
 	Signature string `json:"signature"`
-	Dbid      string `json:"dbid"`
+	Dbid      int    `json:"dbid"`
 }
 
 type EntityQueryResponseResult struct {
@@ -115,7 +115,7 @@ type EntityQueryResponseResult struct {
 	Signature           string                      `json:"signature"`
 	Authors             []string                    `json:"authors"`
 	LatestUpdate        string                      `json:"latestUpdate"`
-	Dbid                string                      `json:"dbid"`
+	Dbid                int                         `json:"dbid"`
 	RepoDbid            string                      `json:"repodbid"`
 	RepoName            string                      `json:"reponame"`
 	RepoShortSummary    string                      `json:"reposhortsummary"`
@@ -130,12 +130,12 @@ type EntityQueryResponseResult struct {
 
 type RepoListQueryResult struct {
 	Name string `json:"name"`
-	Dbid string `json:"dbid"`
+	Dbid int    `json:"dbid"`
 }
 
 type ListFilesResponseResult struct {
 	Type       string `json:"type"`
-	Dbid       string `json:"dbid"`
+	Dbid       int    `json:"dbid"`
 	ImportPath string `json:"importPath"`
 	Files      []struct {
 		ImportPath string `json:"importPath"`

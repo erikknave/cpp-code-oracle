@@ -51,6 +51,9 @@ func FormatIsoDateString(dateStr string) string {
 }
 
 func GetRelativePackagePath(repoPath, packagePath string) (string, error) {
+	if packagePath == "" {
+		return "/", nil
+	}
 	if strings.HasPrefix(packagePath, repoPath) {
 		relativePath := strings.TrimPrefix(packagePath, repoPath)
 		relativePath = strings.TrimPrefix(relativePath, "/") // Remove leading slash if present
