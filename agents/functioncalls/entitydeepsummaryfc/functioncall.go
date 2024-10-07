@@ -96,7 +96,7 @@ func (f *FunctionCall) Function(entitySearchId string) string {
 		return "The entity search id provided does not correspond to an entity, but to a " + requestedType
 	}
 	entityDbid := search.GetDbidFromSearchId(entitySearchId)
-	repoResult, err := cypherqueries.PerformEntityCypherQuery(entityDbid)
+	repoResult, err := cypherqueries.PerformCodeblockCypherQuery(entityDbid)
 	if err != nil {
 		return "An neo4j error occurred while performing the query: " + err.Error()
 	}

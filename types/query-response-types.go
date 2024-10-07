@@ -92,13 +92,14 @@ type FileQueryReponseResult struct {
 	DirectoryName string                       `json:"directoryname"`
 }
 
-type EntityQueryResponseEntity struct {
-	Name      string `json:"name"`
-	Dbid      int    `json:"dbid"`
-	Count     int    `json:"count"`
-	Signature string `json:"signature"`
-	RepoDbid  int    `json:"repodbid"`
-	RepoName  string `json:"reponame"`
+type CodeblockQueryResponseCodeblock struct {
+	Name          string `json:"name"`
+	Dbid          int    `json:"dbid"`
+	Count         int    `json:"count"`
+	CodeblockType string `json:"type"`
+	Signature     string `json:"signature"`
+	RepoDbid      int    `json:"repodbid"`
+	RepoName      string `json:"reponame"`
 }
 
 type EntityQueryResponseFile struct {
@@ -108,25 +109,26 @@ type EntityQueryResponseFile struct {
 	Dbid      int    `json:"dbid"`
 }
 
-type EntityQueryResponseResult struct {
-	IsUsedByEntities    []EntityQueryResponseEntity `json:"is_used_by_entities"`
-	IsUsingEntities     []EntityQueryResponseEntity `json:"is_using_entities"`
-	Name                string                      `json:"name"`
-	Summary             string                      `json:"summary"`
-	Signature           string                      `json:"signature"`
-	Authors             []string                    `json:"authors"`
-	LatestUpdate        string                      `json:"latestUpdate"`
-	Dbid                int                         `json:"dbid"`
-	RepoDbid            string                      `json:"repodbid"`
-	RepoName            string                      `json:"reponame"`
-	RepoShortSummary    string                      `json:"reposhortsummary"`
-	ImportPath          string                      `json:"importpath"`
-	PackageDbid         string                      `json:"packagedbid"`
-	PackageImportPath   string                      `json:"packageimportpath"`
-	PackageShortSummary string                      `json:"packageshortsummary"`
-	FileDbid            string                      `json:"filedbid"`
-	FileName            string                      `json:"filename"`
-	FileSummary         string                      `json:"filesummary"`
+type CodeblockQueryResponseResult struct {
+	IsUsedByCodeblocks    []CodeblockQueryResponseCodeblock `json:"is_used_by_codeblocks"`
+	IsUsingCodeblocks     []CodeblockQueryResponseCodeblock `json:"is_using_codeblocks"`
+	Name                  string                            `json:"name"`
+	Summary               string                            `json:"summary"`
+	CodeblockType         string                            `json:"type"`
+	Signature             string                            `json:"signature"`
+	Authors               []string                          `json:"authors"`
+	LatestUpdate          string                            `json:"latestUpdate"`
+	Dbid                  int                               `json:"dbid"`
+	RepoDbid              int                               `json:"repodbid"`
+	RepoName              string                            `json:"reponame"`
+	RepoShortSummary      string                            `json:"reposhortsummary"`
+	ImportPath            string                            `json:"importpath"`
+	DirectoryDbid         int                               `json:"directorydbid"`
+	DirectoryImportPath   string                            `json:"directoryimportpath"`
+	DirectoryShortSummary string                            `json:"directoryshortsummary"`
+	FileDbid              int                               `json:"filedbid"`
+	FileName              string                            `json:"filename"`
+	FileSummary           string                            `json:"filesummary"`
 }
 
 type RepoListQueryResult struct {

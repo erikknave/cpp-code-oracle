@@ -45,6 +45,7 @@ func ServerInit() {
 	app.Get("/repository", endpoints.RepositoryPageEndPoint)
 	app.Get("/package", endpoints.PackagePageEndPoint)
 	app.Get("/file", endpoints.FilePageEndPoint)
+	app.Get("/codeblock", endpoints.CodeblockPageEndPoint)
 	app.Get("/search", endpoints.SearchPageEndPoint)
 	app.Get("/stats", endpoints.StatsPageEndPoint)
 	app.Post("/send-command", endpoints.CommandEndPoint)
