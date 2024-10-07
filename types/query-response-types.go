@@ -2,16 +2,16 @@ package types
 
 type RepoQueryResponseRepository struct {
 	Name         string `json:"name"`
-	Dbid         string `json:"dbid"`
+	Dbid         int    `json:"dbid"`
 	Count        int    `json:"count"`
 	ShortSummary string `json:"shortsummary"`
 }
 
-type RepoQueryResponsePackage struct {
+type RepoQueryResponseDirectory struct {
 	Name         string `json:"name"`
 	ShortSummary string `json:"shortsummary"`
 	ImportPath   string `json:"importpath"`
-	Dbid         string `json:"dbid"`
+	Dbid         int    `json:"dbid"`
 }
 
 type RepoQueryReponseResult struct {
@@ -20,10 +20,10 @@ type RepoQueryReponseResult struct {
 	Name          string                        `json:"name"`
 	ShortSummary  string                        `json:"shortsummary"`
 	Summary       string                        `json:"summary"`
-	Packages      []RepoQueryResponsePackage    `json:"packages"`
+	Packages      []RepoQueryResponseDirectory  `json:"directories"`
 	Authors       []string                      `json:"authors"`
 	LatestUpdate  string                        `json:"latestUpdate"`
-	Dbid          string                        `json:"dbid"`
+	Dbid          int                           `json:"dbid"`
 }
 
 type PackageQueryResponsePackage struct {
@@ -146,12 +146,12 @@ type ListFilesResponseResult struct {
 }
 
 type Stats struct {
-	Repositories int `json:"repositories"`
-	Directories  int `json:"directories"`
-	Files        int `json:"files"`
-	Codeblocks   int `json:"codeblocks"`
-	// FileCommits      int                 `json:"fileCommits"`
-	// Authors          int                 `json:"authors"`
+	Repositories     int                 `json:"repositories"`
+	Directories      int                 `json:"directories"`
+	Files            int                 `json:"files"`
+	Codeblocks       int                 `json:"codeblocks"`
+	FileCommits      int                 `json:"fileCommits"`
+	Authors          int                 `json:"authors"`
 	Relationships    int                 `json:"relationships"`
 	MostDependedOn   StatsRepositoryInfo `json:"mostDependedOn"`
 	MostDependencies StatsRepositoryInfo `json:"mostDependencies"`
@@ -159,6 +159,6 @@ type Stats struct {
 
 type StatsRepositoryInfo struct {
 	Name  string `json:"name"`
-	Dbid  string `json:"dbid"`
+	Dbid  int    `json:"dbid"`
 	Count int    `json:"count"`
 }

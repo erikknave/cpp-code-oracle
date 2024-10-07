@@ -64,10 +64,10 @@ templ StatsView(stats *types.Stats) {
 								<div class="p-1"></div>
 								<div class="border border-white p-2 rounded ">
 									<div>
-										Documented Packages
+										Documented Directories
 									</div>
 									<div class="text-5xl">
-										{ prettyPrintInt(stats.Packages) }
+										{ prettyPrintInt(stats.Directories) }
 									</div>
 								</div>
 								<div class="p-1"></div>
@@ -82,10 +82,10 @@ templ StatsView(stats *types.Stats) {
 								<div class="p-1"></div>
 								<div class="border border-white p-2 rounded ">
 									<div>
-										Documented Entities
+										Documented Code blocks
 									</div>
 									<div class="text-5xl">
-										{ prettyPrintInt(stats.Entities) }
+										{ prettyPrintInt(stats.Codeblocks) }
 									</div>
 									<div>Variables, functions, etc.</div>
 								</div>
@@ -130,7 +130,7 @@ templ StatsView(stats *types.Stats) {
 											Most depended on repository
 										</div>
 										<div class="text-2xl">
-											<a href={ templ.URL(fmt.Sprintf("/repository?user=test&dbid=%s", stats.MostDependedOn.Dbid)) }>{ stats.MostDependedOn.Name }</a>
+											<a href={ templ.URL(fmt.Sprintf("/repository?user=test&dbid=%d", stats.MostDependedOn.Dbid)) }>{ stats.MostDependedOn.Name }</a>
 										</div>
 										<div class="text-xs italic">
 											{ fmt.Sprintf("%d",stats.MostDependedOn.Count) } other repositories depend on this
@@ -144,7 +144,7 @@ templ StatsView(stats *types.Stats) {
 											Repository with most other dependencies
 										</div>
 										<div class="text-2xl">
-											<a href={ templ.URL(fmt.Sprintf("/repository?user=test&dbid=%s", stats.MostDependencies.Dbid)) }>{ stats.MostDependencies.Name }</a>
+											<a href={ templ.URL(fmt.Sprintf("/repository?user=test&dbid=%d", stats.MostDependencies.Dbid)) }>{ stats.MostDependencies.Name }</a>
 										</div>
 										<div class="text-xs italic">
 											{ fmt.Sprintf("%d",stats.MostDependencies.Count) } dependencies to other repos

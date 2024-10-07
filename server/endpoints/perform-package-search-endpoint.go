@@ -1,22 +1,16 @@
 package endpoints
 
 import (
-	"context"
-	"fmt"
-
 	"github.com/erikknave/go-code-oracle/dbhelpers"
-	"github.com/erikknave/go-code-oracle/search"
 	"github.com/erikknave/go-code-oracle/types"
-	"github.com/erikknave/go-code-oracle/web/templates"
-	"github.com/erikknave/go-code-oracle/web/webhelpers"
 	"github.com/gofiber/fiber/v2"
 )
 
 func PerformPackageSearchEndPoint(c *fiber.Ctx) error {
-	ctx := context.Background()
+	// ctx := context.Background()
 	user := c.Locals("user").(types.User)
 	promptStr := c.FormValue("prompt")
-	dbidStr := c.Query("dbid")
+	// dbidStr := c.Query("dbid")
 	// words := strings.Fields(promptStr)
 	// if words[0] == "/chat" {
 	// 	messages, err := dbhelpers.LoadChatMessagesForUser(&user)
@@ -49,21 +43,22 @@ func PerformPackageSearchEndPoint(c *fiber.Ctx) error {
 		return ChatViewWrapperEndPoint(c)
 	}
 	if promptStr == "/all" {
-		searchResults, err := search.SearchPackages("", dbidStr, 100)
-		if err != nil {
-			fmt.Printf("Error performing search: %v", err)
-			// dbhelpers.SetUserSearchResults(&user, []types.SearchableDocument{})
-			return webhelpers.RenderHttpComponent(templates.SearchPackagesContainerWrapper(searchResults, dbidStr), c, ctx)
-		}
-		// dbhelpers.SetUserSearchResults(&user, searchResults)
-		return webhelpers.RenderHttpComponent(templates.SearchPackagesContainerWrapper(searchResults, dbidStr), c, ctx)
-	}
-	searchResults, err := search.SearchPackages(promptStr, dbidStr, 20)
-	if err != nil {
-		fmt.Printf("Error performing search: %v", err)
+		// searchResults, err := search.SearchPackages("", dbidStr, 100)
+		// if err != nil {
+		// 	fmt.Printf("Error performing search: %v", err)
 		// dbhelpers.SetUserSearchResults(&user, []types.SearchableDocument{})
-		return webhelpers.RenderHttpComponent(templates.SearchPackagesContainerWrapper(searchResults, dbidStr), c, ctx)
+		// return webhelpers.RenderHttpComponent(templates.SearchPackagesContainerWrapper(searchResults, dbidStr), c, ctx)
+		// }
+		// dbhelpers.SetUserSearchResults(&user, searchResults)
+		// return webhelpers.RenderHttpComponent(templates.SearchPackagesContainerWrapper(searchResults, dbidStr), c, ctx)
 	}
+	// searchResults, err := search.SearchPackages(promptStr, dbidStr, 20)
+	// if err != nil {
+	// 	fmt.Printf("Error performing search: %v", err)
+	// dbhelpers.SetUserSearchResults(&user, []types.SearchableDocument{})
+	// return webhelpers.RenderHttpComponent(templates.SearchPackagesContainerWrapper(searchResults, dbidStr), c, ctx)
+	// }
 	// dbhelpers.SetUserSearchResults(&user, searchResults)
-	return webhelpers.RenderHttpComponent(templates.SearchPackagesContainerWrapper(searchResults, dbidStr), c, ctx)
+	// return webhelpers.RenderHttpComponent(templates.SearchPackagesContainerWrapper(searchResults, dbidStr), c, ctx)
+	return c.SendStatus(200)
 }

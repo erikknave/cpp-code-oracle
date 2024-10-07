@@ -3,6 +3,7 @@ package templates
 import (
 	"fmt"
 	"github.com/erikknave/go-code-oracle/types"
+	"strconv"
 )
 
 templ RepositoryPage(repoResult types.RepoQueryReponseResult) {
@@ -11,8 +12,11 @@ templ RepositoryPage(repoResult types.RepoQueryReponseResult) {
 	}
 }
 
-templ RepoNameSpan(repoName string, count int, repoId string) {
-	<p class="text-center" hx-boost="true"><a href={ templ.URL(fmt.Sprintf("/repository?user=test&dbid=%s", repoId)) }>{ FormatRepoLastName(repoName) } ({ fmt.Sprintf("%d",count ) })</a></p>
+templ RepoNameSpan(repoName string, count int, repoId int) {
+	if repoName == "" {
+	} else {
+		<p class="text-center" hx-boost="true"><a href={ templ.URL(fmt.Sprintf("/repository?user=test&dbid=%d", repoId)) }>{ FormatRepoLastName(repoName) } ({ fmt.Sprintf("%d",count ) })</a></p>
+	}
 }
 
 templ RepositoryView(repoResult types.RepoQueryReponseResult) {
@@ -80,16 +84,16 @@ templ RepositoryView(repoResult types.RepoQueryReponseResult) {
 						</div>
 					</div>
 					<div class="p-1 "></div>
-					@SearchPackagesPrompt(repoResult.Dbid)
+					@SearchDirectoriesPrompt(repoResult.Dbid)
 					<div class="p-1 "></div>
 					<div
 						class="p-1 border rounded border-white"
 						hx-trigger="load"
-						hx-post={ fmt.Sprintf("/perform-package-search?dbid=%s&type=repository&agentType=repoAgent", repoResult.Dbid) }
+						hx-post={ fmt.Sprintf("/perform-directory-search?dbid=%d&type=repository&agentType=repoAgent", repoResult.Dbid) }
 						id="search-packages-container"
 					>
 						for _, pkg := range repoResult.Packages {
-							@packageResult(pkg.ImportPath, pkg.ShortSummary, pkg.Dbid)
+							@directoryResult(pkg.ImportPath, pkg.ShortSummary, pkg.Dbid)
 						}
 					</div>
 					<div class="p-1 "></div>
@@ -102,29 +106,41 @@ templ RepositoryView(repoResult types.RepoQueryReponseResult) {
 	</div>
 }
 
-templ packageResult(importPath string, shortSummary string, dbid string) {
-	<div class="border-b">
-		<div>
-			<span class="font-bold">Package:</span> <span class="underline"><a href={ templ.URL(fmt.Sprintf("/package?dbid=%s", dbid)) }>{ importPath }</a></span>
+templ directoryResult(importPath string, shortSummary string, dbid int) {
+	if importPath == "" {
+		<div class="border-b">
+			<div>
+				<span class="font-bold">Directory:</span> <span class="underline"><a href={ templ.URL(fmt.Sprintf("/directory?dbid=%d", dbid)) }>/</a></span>
+			</div>
+			<div>
+				<span class="font-bold">Summary:</span> <md-span>{ shortSummary }</md-span>
+			</div>
+			<div class="p-1 "></div>
 		</div>
-		<div>
-			<span class="font-bold">Summary:</span> <md-span>{ shortSummary }</md-span>
+	} else {
+		<div class="border-b">
+			<div>
+				<span class="font-bold">Directory:</span> <span class="underline"><a href={ templ.URL(fmt.Sprintf("/directory?dbid=%d", dbid)) }>{ importPath }</a></span>
+			</div>
+			<div>
+				<span class="font-bold">Summary:</span> <md-span>{ shortSummary }</md-span>
+			</div>
+			<div class="p-1 "></div>
 		</div>
-		<div class="p-1 "></div>
-	</div>
+	}
 }
 
-templ SearchPackagesPrompt(dbid string) {
+templ SearchDirectoriesPrompt(dbid int) {
 	<input
 		type="text"
 		name="prompt"
 		id="prompt"
-		hx-post={ fmt.Sprintf("/perform-package-search?dbid=%s&type=repository&agentType=repoAgent", dbid) }
+		hx-post={ fmt.Sprintf("/perform-directory-search?dbid=%d&type=repository&agentType=repoAgent", dbid) }
 		hx-trigger="keyup[key=='Enter']"
 		class="  w-full border rounded border-white p-2 text-sm bg-gray-800 text-white"
 		type="text"
 		hx-swap="outerHTML"
-		placeholder="Search packages and files.."
+		placeholder="Search directories and files.."
 		hx-indicator
 	/>
 	<script type="text/javascript">
@@ -138,13 +154,21 @@ templ RepositoryViewWrapper(repoResult types.RepoQueryReponseResult) {
 	</div>
 }
 
-templ SearchPackagesContainerWrapper(results []types.SearchableDocument, dbid string) {
+func getIntFromString(s string) int {
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		return 0
+	}
+	return i
+}
+
+templ SearchPackagesContainerWrapper(results []types.SearchableDocument, dbid int) {
 	<div id="search-packages-container" hx-swap-oob="outerHTML">
 		<div class="p-1 border rounded border-white" id="search-packages-container">
 			for _, pkg := range results {
-				@packageResult(pkg.Name, pkg.ShortSummary, fmt.Sprintf("%d", pkg.Dbid))
+				@directoryResult(pkg.Name, pkg.ShortSummary, pkg.Dbid)
 			}
 		</div>
 	</div>
-	@SearchPackagesPrompt(dbid)
+	@SearchDirectoriesPrompt(dbid)
 }
