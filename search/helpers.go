@@ -9,17 +9,17 @@ import (
 )
 
 func SearchReporisitories(query string, limit int) ([]types.SearchableDocument, error) {
-	results, err := SearchDocuments(query, limit, "type = repository")
+	results, err := SearchDocuments(query, limit, "doc_type = repository")
 	if err != nil {
 		return []types.SearchableDocument{}, err
 	}
 	return results, nil
 }
 
-func SearchPackages(query string, dbid string, limit int) ([]types.SearchableDocument, error) {
-	filterStr := "type = package"
+func SearchDirectories(query string, dbid string, limit int) ([]types.SearchableDocument, error) {
+	filterStr := "doc_type = directory"
 	if dbid != "" {
-		filterStr = "type = package AND repository_id = " + dbid
+		filterStr = "doc_type = directory AND repository_id = " + dbid
 	}
 	results, err := SearchDocuments(query, limit, filterStr)
 	if err != nil {
@@ -28,22 +28,34 @@ func SearchPackages(query string, dbid string, limit int) ([]types.SearchableDoc
 	return results, nil
 }
 
-func SearchModules(query string, dbid string, limit int) ([]types.SearchableDocument, error) {
-	filterStr := "type = module"
-	if dbid != "" {
-		filterStr = "type = module AND repository_id = " + dbid
-	}
-	results, err := SearchDocuments(query, limit, filterStr)
-	if err != nil {
-		return []types.SearchableDocument{}, err
-	}
-	return results, nil
-}
+// func SearchModules(query string, dbid string, limit int) ([]types.SearchableDocument, error) {
+// 	filterStr := "doc_type = module"
+// 	if dbid != "" {
+// 		filterStr = "doc_type = module AND repository_id = " + dbid
+// 	}
+// 	results, err := SearchDocuments(query, limit, filterStr)
+// 	if err != nil {
+// 		return []types.SearchableDocument{}, err
+// 	}
+// 	return results, nil
+// }
 
 func SearchFiles(query string, dbid string, limit int) ([]types.SearchableDocument, error) {
-	filterStr := "type = file"
+	filterStr := "doc_type = file"
 	if dbid != "" {
-		filterStr = "type = file AND name != 'NON_EXISTING_FILE.go' AND package_id = " + dbid
+		filterStr = "doc_type = file AND name != 'NON_EXISTING_FILE.go' AND package_id = " + dbid
+	}
+	results, err := SearchDocuments(query, limit, filterStr)
+	if err != nil {
+		return []types.SearchableDocument{}, err
+	}
+	return results, nil
+}
+
+func SearchContainers(query string, dbid string, limit int) ([]types.SearchableDocument, error) {
+	filterStr := "doc_type = container"
+	if dbid != "" {
+		filterStr = "doc_type = container AND name != 'NON_EXISTING_FILE.go' AND repository_id = " + dbid
 	}
 	results, err := SearchDocuments(query, limit, filterStr)
 	if err != nil {
@@ -53,7 +65,7 @@ func SearchFiles(query string, dbid string, limit int) ([]types.SearchableDocume
 }
 
 func SearchAllFiles(query string, limit int) ([]types.SearchableDocument, error) {
-	filterStr := "type = file AND name != 'NON_EXISTING_FILE.go'"
+	filterStr := "doc_type = file AND name != 'NON_EXISTING_FILE.go'"
 	results, err := SearchDocuments(query, limit, filterStr)
 	if err != nil {
 		return []types.SearchableDocument{}, err
@@ -62,9 +74,9 @@ func SearchAllFiles(query string, limit int) ([]types.SearchableDocument, error)
 }
 
 func SearchFilesWithinRepository(query string, dbid string, limit int) ([]types.SearchableDocument, error) {
-	filterStr := "type = file"
+	filterStr := "doc_type = file"
 	if dbid != "" {
-		filterStr = "type = file AND name != 'NON_EXISTING_FILE.go' AND repository_id = " + dbid
+		filterStr = "doc_type = file AND name != 'NON_EXISTING_FILE.go' AND repository_id = " + dbid
 	}
 	results, err := SearchDocuments(query, limit, filterStr)
 	if err != nil {
@@ -74,9 +86,9 @@ func SearchFilesWithinRepository(query string, dbid string, limit int) ([]types.
 }
 
 func SearchEntities(query string, dbid string, limit int) ([]types.SearchableDocument, error) {
-	filterStr := "type = entity"
+	filterStr := "doc_type = entity"
 	if dbid != "" {
-		filterStr = "type = entity AND file_id = " + dbid
+		filterStr = "doc_type = entity AND file_id = " + dbid
 	}
 	results, err := SearchDocuments(query, limit, filterStr)
 	if err != nil {
@@ -95,7 +107,7 @@ func SearchAllDocuments(query string, limit int) ([]types.SearchableDocument, er
 }
 
 func SearchWSReporisitories(query string) (string, error) {
-	results, err := SearchDocuments(query, 10, "type = repository")
+	results, err := SearchDocuments(query, 10, "doc_type = repository")
 	if err != nil {
 		return "", err
 	}
@@ -107,7 +119,7 @@ func SearchWSReporisitories(query string) (string, error) {
 }
 
 func SearchWSPackages(query string) (string, error) {
-	results, err := SearchDocuments(query, 10, "type = package")
+	results, err := SearchDocuments(query, 10, "doc_type = package")
 	if err != nil {
 		return "", err
 	}
@@ -119,7 +131,7 @@ func SearchWSPackages(query string) (string, error) {
 }
 
 func SearchWSModules(query string) (string, error) {
-	results, err := SearchDocuments(query, 10, "type = module")
+	results, err := SearchDocuments(query, 10, "doc_type = module")
 	if err != nil {
 		return "", err
 	}
@@ -131,7 +143,7 @@ func SearchWSModules(query string) (string, error) {
 }
 
 func SearchWSFiles(query string) (string, error) {
-	results, err := SearchDocuments(query, 10, "type = file")
+	results, err := SearchDocuments(query, 10, "doc_type = file")
 	if err != nil {
 		return "", err
 	}
@@ -143,7 +155,7 @@ func SearchWSFiles(query string) (string, error) {
 }
 
 func SearchWSEntities(query string) (string, error) {
-	results, err := SearchDocuments(query, 10, "type = entity")
+	results, err := SearchDocuments(query, 10, "doc_type = entity")
 	if err != nil {
 		return "", err
 	}

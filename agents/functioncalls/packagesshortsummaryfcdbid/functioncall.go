@@ -33,7 +33,7 @@ func (f *FunctionCall) ToolDefinition() llms.Tool {
 		Type: "function",
 		Function: &llms.FunctionDefinition{
 			Name:        name,
-			Description: "Returns the short summaries of a number of go packages (roughly translated to folders within a repository) within a certain repository related to a query",
+			Description: "Returns the short summaries of a number of go directories (roughly translated to folders within a repository) within a certain repository related to a query",
 			Parameters: map[string]any{
 				"type": "object",
 				"properties": map[string]any{
@@ -43,7 +43,7 @@ func (f *FunctionCall) ToolDefinition() llms.Tool {
 					},
 					"query": map[string]any{
 						"type":        "string",
-						"description": "The query to find the packages related to",
+						"description": "The query to find the directories related to",
 					},
 					// "unit": map[string]any{
 					// 	"type": "string",
@@ -91,7 +91,7 @@ func (f *FunctionCall) Function(inputSearchId string, queryString string) string
 		return "The repository dbid is not a repository, but a " + requestedType
 	}
 	dbid := search.GetDbidFromSearchId(inputSearchId)
-	searchDocs, err := search.SearchPackages(queryString, dbid, limit)
+	searchDocs, err := search.SearchDirectories(queryString, dbid, limit)
 	if err != nil {
 		return fmt.Sprintf("Error in search.SearchPackages: %v", err)
 	}

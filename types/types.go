@@ -50,19 +50,20 @@ type FunctionCall interface {
 }
 
 type SearchableDocument struct {
-	ID           string    `json:"id"`
-	Name         string    `json:"name"`
-	Summary      string    `json:"summary"`
-	Signature    string    `json:"signature"`
-	Path         string    `json:"path"`
-	ShortSummary string    `json:"short_summary"`
-	Authors      []string  `json:"authors"`
-	Dbid         int       `json:"dbid"` // This field should not be indexed
-	Type         string    `json:"type"`
-	LatestCommit time.Time `json:"latest_commit"`
-	RepositoryID int       `json:"repository_id"`
-	PackageID    int       `json:"package_id"`
-	FileID       int       `json:"file_id"`
+	ID            string    `json:"id"`
+	Name          string    `json:"name"`
+	Summary       string    `json:"summary"`
+	Signature     string    `json:"signature"`
+	Path          string    `json:"path"`
+	ShortSummary  string    `json:"short_summary"`
+	Authors       []string  `json:"authors"`
+	Dbid          int       `json:"dbid"` // This field should not be indexed
+	Type          string    `json:"doc_type"`
+	ContainerType string    `json:"container_type"`
+	LatestCommit  time.Time `json:"latest_commit"`
+	RepositoryID  int       `json:"repository_id"`
+	PackageID     int       `json:"package_id"`
+	FileID        int       `json:"file_id"`
 }
 
 type UserSearchResults struct {

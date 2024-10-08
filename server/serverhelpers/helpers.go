@@ -83,7 +83,7 @@ func GetUserFromCookie(c *fiber.Ctx) (types.User, error) {
 	if username == "" {
 		username := c.Cookies("CF_Authorization")
 		if username == "" {
-			return types.User{}, fmt.Errorf("No user found in cookie")
+			return types.User{}, fmt.Errorf("no user found in cookie")
 		}
 		user, _ = dbhelpers.LoadUserFromUserName(username)
 		if user.ID == 0 {

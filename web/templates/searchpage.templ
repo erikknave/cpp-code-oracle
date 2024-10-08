@@ -1,3 +1,4 @@
+
 package templates
 
 import (
@@ -28,23 +29,26 @@ func generateTypeName(typeStr string) string {
 	switch typeStr {
 	case "repository":
 		return "Repository"
-	case "package":
-		return "Package"
+	case "directory":
+		return "Directory"
 	case "file":
 		return "File"
-	case "entity":
-		return "Entity"
+	case "container":
+		return "Container"
 	default:
 		return "Unknown"
 	}
 }
 
 templ searchResultNameRow(result types.SearchableDocument) {
-	if result.Type == "entity" {
-		<div><span class="font-bold">Entity</span>: { result.Path }: { result.Name }</div>
-	}
-	if result.Type != "entity" {
-		<div><span class="font-bold">{ generateTypeName(result.Type) }</span>: <a href={ templ.URL(generateHrefString(result)) }>{ result.Path }</a></div>
+	if result.ContainerType != "variable" {
+		if result.Type == "entity" {
+			<div><span class="font-bold">Entity</span>: { result.Path }: { result.Name }</div>
+		} else if result.Type == "container" {
+			<div><span class="font-bold">Container ({ result.ContainerType })</span>: { result.Signature }</div>
+		} else {
+			<div><span class="font-bold">{ generateTypeName(result.Type) }</span>: <a href={ templ.URL(generateHrefString(result)) }>{ result.Path }</a></div>
+		}
 	}
 }
 
@@ -60,13 +64,15 @@ templ SearchView(searchResults *[]types.SearchableDocument, errorStr string) {
 						<div class="p-1"></div>
 					}
 					for _, result := range *searchResults {
-						<div class="p-2 border border-white rounded">
-							@searchResultNameRow(result)
-							<div><span class="font-bold">Summary</span>: <md-block>{ FormatSummaryString(&result) }</md-block></div>
-							<div><span class="font-bold">Latest authors</span>: { FormatAuthorString(result.Authors) }</div>
-							<div><span class="font-bold">Last updated</span>: { FormatDateString(result.LatestCommit) }</div>
-						</div>
-						<div class="p-1"></div>
+						if result.ContainerType != "variable" {
+							<div class="p-2 border border-white rounded">
+								@searchResultNameRow(result)
+								<div><span class="font-bold">Summary</span>: <md-block>{ FormatSummaryString(&result) }</md-block></div>
+								<div><span class="font-bold">Latest authors</span>: { FormatAuthorString(result.Authors) }</div>
+								<div><span class="font-bold">Last updated</span>: { FormatDateString(result.LatestCommit) }</div>
+							</div>
+							<div class="p-1"></div>
+						}
 					}
 				</div>
 			</div>

@@ -33,13 +33,13 @@ func (f *FunctionCall) ToolDefinition() llms.Tool {
 		Type: "function",
 		Function: &llms.FunctionDefinition{
 			Name:        name,
-			Description: "Returns the short summaries of a number of go packages related to a query",
+			Description: "Returns the short summaries of a number of go directories related to a query",
 			Parameters: map[string]any{
 				"type": "object",
 				"properties": map[string]any{
 					"query": map[string]any{
 						"type":        "string",
-						"description": "The query to find the packages related to",
+						"description": "The query to find the directories related to",
 					},
 					// "unit": map[string]any{
 					// 	"type": "string",
@@ -70,7 +70,7 @@ func (f *FunctionCall) Execute(args json.RawMessage) (string, error) {
 // }
 
 const responseTemplate = `
-The following packages were found (presented by relevance):
+The following directories were found (presented by relevance):
 {{range .}}
 - Name: {{.Name}}
 - Import Path: {{.Path}}
@@ -81,7 +81,7 @@ The following packages were found (presented by relevance):
 func (f *FunctionCall) Function(queryString string) string {
 	limit := 5
 	dbid := f.Dbid
-	searchDocs, err := search.SearchPackages(queryString, fmt.Sprintf("%d", dbid), limit)
+	searchDocs, err := search.SearchDirectories(queryString, fmt.Sprintf("%d", dbid), limit)
 	if err != nil {
 		return fmt.Sprintf("Error in search.SearchPackages: %v", err)
 	}

@@ -7,6 +7,7 @@ import (
 
 	"github.com/erikknave/go-code-oracle/search"
 	"github.com/erikknave/go-code-oracle/server/chromaclient"
+	"github.com/erikknave/go-code-oracle/server/pgvector"
 	"github.com/erikknave/go-code-oracle/types"
 	"github.com/gofiber/contrib/websocket"
 )
@@ -94,15 +95,15 @@ func PerformSearch(searchStr string) ([]types.SearchableDocument, error) {
 				return nil, err
 			}
 			return response, nil
-		case "/packages":
-			response, err = search.SearchPackages(queryString, "", 100)
+		case "/directories":
+			response, err = search.SearchDirectories(queryString, "", 100)
 			if err != nil {
 				log.Fatalf("Error searching packages: %v", err)
 				return nil, err
 			}
 			return response, nil
-		case "/modules":
-			response, err = search.SearchModules(queryString, "", 100)
+		case "/containers":
+			response, err = search.SearchContainers(queryString, "", 100)
 			if err != nil {
 				log.Fatalf("Error searching modules: %v", err)
 				return nil, err
@@ -142,7 +143,8 @@ func PerformSearch(searchStr string) ([]types.SearchableDocument, error) {
 				response = chromaclient.PerformFileQuery(queryString, 10)
 				return response, nil
 			default:
-				response = chromaclient.PerformRepositoryQuery(queryString, 10)
+				// response = chromaclient.PerformRepositoryQuery(queryString, 10)
+				response = pgvector.PerformSearch(queryString, 10)
 				return response, nil
 			}
 		default:
