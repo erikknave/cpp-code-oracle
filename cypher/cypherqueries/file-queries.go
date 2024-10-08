@@ -45,7 +45,7 @@ func PerformFileCypherQuery(dbid string) (types.FileQueryReponseResult, error) {
 }
 
 const listFilesInRepoQueryTemplate = `
-MATCH (r:Repository{dbid:"%s"})-[]-(m:Module)-[]-(p:Package)-[:CONTAINS]-(f:File)
+MATCH (r:REPOSITORY{dbid:"%s"})-[]-(d:DIRECTORY)-[]-(f:FILE)
 WITH r,  collect({importPath: f.repoPath,  dbid: f.dbid, name: f.name}) AS files
 RETURN {type: 'repository', dbid: r.dbid, importPath: r.name, files: files} AS result
 `
@@ -57,8 +57,8 @@ RETURN {type: 'repository', dbid: r.dbid, importPath: r.name, files: files} AS r
 //   [f IN files | {importPath: f.repoPath, dbid: f.dbid, name: f.name}]} AS result
 // `
 
-const listFilesInPackageQueryTemplate = `
-MATCH (r:Repository)-[]-(m:Module)-[]-(p:Package {dbid:"%s"})-[:CONTAINS]-(f:File)
+const listFilesInDirectoryQueryTemplate = `
+MATCH (r:REPOSITORY)-[]-(d:DIRECTORY {dbid:"%s"})-[]-(f:File)
 WITH  p, collect({importPath: f.repoPath,  dbid: f.dbid, name: f.name}) AS files
 RETURN {type:'package', dbid: p.dbid,  importPath: p.repoPath, files: files} AS result
 `
@@ -78,8 +78,8 @@ func ListFilesBasedOnSearchId(searchId string) (types.ListFilesResponseResult, e
 		}
 		finalResult := typedResult[0]
 		return finalResult, nil
-	case "package":
-		packageTemplate := fmt.Sprintf(listFilesInPackageQueryTemplate, words[1])
+	case "directory":
+		packageTemplate := fmt.Sprintf(listFilesInDirectoryQueryTemplate, words[1])
 		cypherResult := cypher.InjectCypher(packageTemplate)
 		cypherResultJson, _ := json.Marshal(cypherResult)
 		var typedResult []types.ListFilesResponseResult

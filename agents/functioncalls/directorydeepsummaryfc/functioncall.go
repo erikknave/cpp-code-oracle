@@ -1,4 +1,4 @@
-package packagedeepsummaryfc
+package directorydeepsummaryfc
 
 import (
 	"bytes"
@@ -13,7 +13,7 @@ import (
 	"github.com/tmc/langchaingo/llms"
 )
 
-const name = "PackageDeepSummary"
+const name = "DirectoryDeepSummary"
 
 type FunctionCall struct {
 	User *types.User
@@ -35,14 +35,14 @@ func (f *FunctionCall) ToolDefinition() llms.Tool {
 		Type: "function",
 		Function: &llms.FunctionDefinition{
 			Name:        name,
-			Description: "Returns the 'deep' summary of a package (roughly folder) within a certain repository (including what files it contains)",
+			Description: "Returns the 'deep' summary of a directory within a certain repository (including what files it contains)",
 			Parameters: map[string]any{
 				"type": "object",
 				"properties": map[string]any{
 
-					"packageSearchId": map[string]any{
+					"directorySearchId": map[string]any{
 						"type":        "string",
-						"description": "The search id of the package to get the deep summary of",
+						"description": "The search id of the directory to get the deep summary of",
 					},
 					// "query": map[string]any{
 					// 	"type":        "string",
@@ -53,7 +53,7 @@ func (f *FunctionCall) ToolDefinition() llms.Tool {
 					// 	"enum": []string{"fahrenheit", "celsius"},
 					// },
 				},
-				"required": []string{"packageSearchId"},
+				"required": []string{"directorySearchId"},
 			},
 		},
 	}
@@ -62,23 +62,23 @@ func (f *FunctionCall) ToolDefinition() llms.Tool {
 func (f *FunctionCall) Execute(args json.RawMessage) (string, error) {
 	fmt.Printf("\n - Execute function %s called\n", name)
 	var params struct {
-		PackageSearchId string `json:"packageSearchId"`
+		DirectorySearchId string `json:"directorySearchId"`
 	}
 	if err := json.Unmarshal(args, &params); err != nil {
 		return "", err
 	}
-	return f.Function(params.PackageSearchId), nil
+	return f.Function(params.DirectorySearchId), nil
 }
 
 const responseTemplate = `
-The name of the package is {{.Name}} with search id package-{{.Dbid}}
-The import path of the package is {{.ImportPath}}
+The name of the directory is {{.Name}} with search id directory-{{.Dbid}}
+The import path of the directory is {{.ImportPath}}
 
-The package belongs to the repository {{.RepoName}} with search id repository-{{.RepoDbid}}
+The directory belongs to the repository {{.RepoName}} with search id repository-{{.RepoDbid}}
 
-Here is a summary of the package: {{.Summary}}
+Here is a summary of the directory: {{.Summary}}
 
-Here is a list of all files within the package:
+Here is a list of all files within the directory:
 {{- range .Files}}
 Import path: {{ .ImportPath }}
 Search id (not shown to user): file-{{ .Dbid }}
@@ -87,12 +87,12 @@ Summary: {{ .Summary }}
 {{- end }}
 `
 
-func (f *FunctionCall) Function(packageSearchId string) string {
-	requestedType := search.GetTypeFromSearchId(fmt.Sprintf("%v", packageSearchId))
-	if requestedType != "package" {
-		return "The dbid provided does not correspond to a package, but to a " + requestedType
+func (f *FunctionCall) Function(directorySearchId string) string {
+	requestedType := search.GetTypeFromSearchId(fmt.Sprintf("%v", directorySearchId))
+	if requestedType != "directory" {
+		return "The dbid provided does not correspond to a directory, but to a " + requestedType
 	}
-	packageDbid := search.GetDbidFromSearchId(fmt.Sprintf("%v", packageSearchId))
+	packageDbid := search.GetDbidFromSearchId(fmt.Sprintf("%v", directorySearchId))
 	repoResult, err := cypherqueries.PerformDirectoryCypherQuery(packageDbid)
 	if err != nil {
 		return "An neo4j error occurred while performing the query: " + err.Error()

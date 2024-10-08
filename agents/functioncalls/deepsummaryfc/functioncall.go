@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/erikknave/go-code-oracle/agents/functioncalls/directorydeepsummaryfc"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/entitydeepsummaryfc"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/filedeepsummaryfc"
-	"github.com/erikknave/go-code-oracle/agents/functioncalls/packagedeepsummaryfc"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/repositorydeepsummaryfc"
 	"github.com/erikknave/go-code-oracle/types"
 	"github.com/tmc/langchaingo/llms"
@@ -38,7 +38,7 @@ func (f *FunctionCall) ToolDefinition() llms.Tool {
 		Type: "function",
 		Function: &llms.FunctionDefinition{
 			Name:        name,
-			Description: "Returns the 'deep' based on a search id (a repository, package, file or entity (An entity can be a variable or a function, is a block within a go file",
+			Description: "Returns the 'deep' summary based on a search id (a repository, package, file or entity (An entity can be a variable or a function, is a block within a go file",
 			Parameters: map[string]any{
 				"type": "object",
 				"properties": map[string]any{
@@ -101,8 +101,8 @@ func (f *FunctionCall) Function(searchId string) string {
 		fc := repositorydeepsummaryfc.CreateNewFunctionCall(f.Ctx)
 		returnString := fc.Function(searchId)
 		return returnString
-	case "package":
-		fc := packagedeepsummaryfc.CreateNewFunctionCall(f.Ctx)
+	case "directory":
+		fc := directorydeepsummaryfc.CreateNewFunctionCall(f.Ctx)
 		returnString := fc.Function(searchId)
 		return returnString
 	case "file":

@@ -35,7 +35,7 @@ func (f *FunctionCall) ToolDefinition() llms.Tool {
 		Type: "function",
 		Function: &llms.FunctionDefinition{
 			Name:        name,
-			Description: "Returns the 'deep' summary of a .go file within a certain repository (including what functions and variables it contains)",
+			Description: "Returns the 'deep' summary of a c++ file within a certain repository (including what functions and variables it contains)",
 			Parameters: map[string]any{
 				"type": "object",
 				"properties": map[string]any{
@@ -74,7 +74,7 @@ const responseTemplate = `
 The name of the file is {{.Name}} with search id file-{{.Dbid}}.
 The import path of the file is {{.ImportPath}}.
 
-The file is located in the repository {{.RepoName}} with search id repository-{{.RepoDbid}} and in the package {{.PackageImportPath}} with search id package-{{.PackageDbid}}.
+The file is located in the repository {{.RepoName}} with search id repository-{{.RepoDbid}} and in the directory {{.DirectoryImportPath}} with search id directory-{{.DirectoryDbid}}.
 The summary of the file is: {{.Summary}}
 
 Here is a list of all variables, constants, functions, types and methods  within the file:
@@ -88,7 +88,7 @@ Summary: {{ .Summary }}
 `
 
 func (f *FunctionCall) Function(fileSearchId string) string {
-	requestedType := search.GetTypeFromSearchId(fmt.Sprintf("%s", fileSearchId))
+	requestedType := search.GetTypeFromSearchId(fileSearchId)
 	if requestedType != "file" {
 		return "The dbid provided does not correspond to a file, but to a " + requestedType
 	}

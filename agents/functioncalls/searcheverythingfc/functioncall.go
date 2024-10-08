@@ -34,7 +34,7 @@ func (f *FunctionCall) ToolDefinition() llms.Tool {
 		Type: "function",
 		Function: &llms.FunctionDefinition{
 			Name:        name,
-			Description: "Returns the short summaries of a number of repositories, packages,files or entities, i.e. variables and functions, related to a query",
+			Description: "Returns the short summaries of a number of repositories, directories,files or containers, i.e. variables and functions, related to a query",
 			Parameters: map[string]any{
 				"type": "object",
 				"properties": map[string]any{
