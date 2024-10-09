@@ -21,8 +21,16 @@ func main() {
 	// chromaclient.Init()
 	agenthelpers.InitAgentDescriptions()
 	search.Init()
+
 	fmt.Println("Server starting...")
 	server.ServerInit()
+
 	// repos, _ := cypherqueries.PerformRepoListCypherQuery()
 	// helpers.PrettyPrintJSONInterface(repos)
+
+	// fileContent, err := filecontent.GetFileContent("main.cpp")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// fmt.Println(fileContent)
 }

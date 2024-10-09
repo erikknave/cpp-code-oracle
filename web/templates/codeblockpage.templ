@@ -56,7 +56,7 @@ templ CodeblockView(result types.CodeblockQueryResponseResult) {
 						</div>
 						<div class="px-1"></div>
 						<div class="p-1 border w-[70vw] rounded border white">
-							<span class="font-bold">Summary: </span><md-span>{ result.Summary }</md-span>
+							<span class="font-bold">Summary: </span><md-span>There are no summaries for code blocks { result.Summary }</md-span>
 						</div>
 					</div>
 					<div class="p-1"></div>
@@ -108,7 +108,9 @@ templ CodeblockView(result types.CodeblockQueryResponseResult) {
 					</div>
 					<div class="p-1 "></div>
 					<div class="w-full ">
-						@SearchEntitiesPrompt(result.Dbid)
+						<div class="font-bold italic">Codeblock content in file { result.FileName }: </div>
+						<md-block>{ result.Content }</md-block>
+						// @SearchEntitiesPrompt(result.Dbid)
 					</div>
 					<div class="p-1 "></div>
 					// <div class="p-1 border rounded border-white" hx-post={ fmt.Sprintf("/perform-entity-search?dbid=%d&type=file&agentType=fileAgent", result.Dbid) } id="search-entities-container">
@@ -175,7 +177,7 @@ templ SearchCodeblocksContainerWrapper(results []types.SearchableDocument, dbid 
 	<div id="search-entities-container" hx-swap-oob="outerHTML">
 		<div class="p-1 border rounded border-white" id="search-entities-container">
 			for _, pkg := range results {
-				@entityResult(pkg.Signature, pkg.Name, pkg.Type)
+				@entityResult(pkg.Signature, pkg.Name, pkg.Type, pkg.Dbid)
 			}
 		</div>
 	</div>

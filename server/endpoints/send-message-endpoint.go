@@ -84,8 +84,8 @@ func StartCodeAgentFlow(c context.Context) error {
 		return agentflows.StartCodeBaseAgentFlow(messageHistory, user, c, promptStr)
 	case "repoAgent":
 		return agentflows.StartRepoAgentFlow(messageHistory, user, c, promptStr)
-	case "packageAgent":
-		return agentflows.StartPackageAgentFlow(messageHistory, user, c, promptStr)
+	case "directoryAgent":
+		return agentflows.StartDirectoryAgentFlow(messageHistory, user, c, promptStr)
 	case "fileAgent":
 		return agentflows.StartFileAgentFlow(messageHistory, user, c, promptStr)
 	}

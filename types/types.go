@@ -61,6 +61,8 @@ type SearchableDocument struct {
 	Type          string    `json:"doc_type"`
 	ContainerType string    `json:"container_type"`
 	LatestCommit  time.Time `json:"latest_commit"`
+	StartOffset   int       `json:"start_offset"`
+	EndOffset     int       `json:"end_offset"`
 	RepositoryID  int       `json:"repository_id"`
 	PackageID     int       `json:"package_id"`
 	FileID        int       `json:"file_id"`

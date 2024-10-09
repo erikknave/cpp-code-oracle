@@ -5,9 +5,10 @@ import (
 
 	"github.com/erikknave/go-code-oracle/agents"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/deepsummaryfc"
+	"github.com/erikknave/go-code-oracle/agents/functioncalls/directoriesshortsummaryfcdbid"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/filecommitsfcdbid"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/fileswithinrepositoryfc"
-	"github.com/erikknave/go-code-oracle/agents/functioncalls/packagesshortsummaryfcdbid"
+	"github.com/erikknave/go-code-oracle/agents/functioncalls/getfilecontentsfc"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/performreposearchfc"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/searchallfilesfc"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/searcheverythingfc"
@@ -28,9 +29,10 @@ func (a *Agent) Init(messageHistory []types.ChatMessage, u *types.User, c contex
 		searchallfilesfc.CreateNewFunctionCall(c),
 		deepsummaryfc.CreateNewFunctionCall(c),
 		performreposearchfc.CreateNewFunctionCall(c),
-		packagesshortsummaryfcdbid.CreateNewFunctionCall(c),
+		directoriesshortsummaryfcdbid.CreateNewFunctionCall(c),
 		fileswithinrepositoryfc.CreateNewFunctionCall(c),
 		filecommitsfcdbid.CreateNewFunctionCall(c),
+		getfilecontentsfc.CreateNewFunctionCall(c),
 		// &modulesshortsummaryfc.FunctionCall{},
 		// &packagesshortsummaryfc.FunctionCall{},
 		// &repositoriesshortsummaryfc.FunctionCall{},

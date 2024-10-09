@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/erikknave/go-code-oracle/agents/codebaseagent"
+	"github.com/erikknave/go-code-oracle/agents/directoryagent"
 	"github.com/erikknave/go-code-oracle/agents/fileagent"
-	"github.com/erikknave/go-code-oracle/agents/packageagent"
 	"github.com/erikknave/go-code-oracle/agents/repoagent"
 	"github.com/erikknave/go-code-oracle/dbhelpers"
 	"github.com/erikknave/go-code-oracle/types"
@@ -52,13 +52,13 @@ func StartRepoAgentFlow(
 	return nil
 }
 
-func StartPackageAgentFlow(
+func StartDirectoryAgentFlow(
 	messageHistory []types.ChatMessage,
 	user types.User,
 	c context.Context,
 	promptStr string,
 ) error {
-	agent := &packageagent.Agent{}
+	agent := &directoryagent.Agent{}
 	searchDoc := c.Value(types.CtxKey("searchableDocument")).(types.SearchableDocument)
 	agent.Init(messageHistory, &user, searchDoc.Dbid, c)
 	var messages []types.ChatMessage

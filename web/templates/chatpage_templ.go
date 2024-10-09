@@ -67,8 +67,8 @@ func chatViewHeadline(agentType types.UserAgentType, searchDoc types.SearchableD
 		return "Chat scope: All indexed repositories"
 	case "repoAgent":
 		return fmt.Sprintf("Chat scope: Repository %s", searchDoc.Name)
-	case "packageAgent":
-		return fmt.Sprintf("Chat scope: Package %s", searchDoc.Name)
+	case "directoryAgent":
+		return fmt.Sprintf("Chat scope: Directory %s", searchDoc.Name)
 	case "fileAgent":
 		return fmt.Sprintf("Chat scope: File %s", searchDoc.Name)
 	default:
@@ -83,8 +83,8 @@ func getScopeTypeString(agentType types.UserAgentType) string {
 		return "All indexed repositories"
 	case "repoAgent":
 		return fmt.Sprintf("Repository")
-	case "packageAgent":
-		return fmt.Sprintf("Package")
+	case "directoryAgent":
+		return fmt.Sprintf("Directory")
 	case "fileAgent":
 		return fmt.Sprintf("File")
 	default:
@@ -99,8 +99,8 @@ func getHrefString(agentType types.UserAgentType, searchDoc types.SearchableDocu
 		return ""
 	case "repoAgent":
 		return fmt.Sprintf("/repository?user=test&dbid=%d", searchDoc.Dbid)
-	case "packageAgent":
-		return fmt.Sprintf("/package?user=test&dbid=%d", searchDoc.Dbid)
+	case "directoryAgent":
+		return fmt.Sprintf("/directory?user=test&dbid=%d", searchDoc.Dbid)
 	case "fileAgent":
 		return fmt.Sprintf("/file?user=test&dbid=%d", searchDoc.Dbid)
 	default:

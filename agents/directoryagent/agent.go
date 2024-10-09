@@ -1,4 +1,4 @@
-package packageagent
+package directoryagent
 
 import (
 	"context"
@@ -8,12 +8,13 @@ import (
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/deepsummaryfc"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/filecommitsfcdbid"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/fileshortsummaryfc"
+	"github.com/erikknave/go-code-oracle/agents/functioncalls/getfilecontentsfc"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/listfilesforsearchidfc"
 	"github.com/erikknave/go-code-oracle/cypher/cypherqueries"
 	"github.com/erikknave/go-code-oracle/types"
 )
 
-const NAME = "packageAgent"
+const NAME = "directoryAgent"
 
 type queryResponseType struct {
 	Name           string   `json:"name"`
@@ -40,6 +41,7 @@ func (a *Agent) Init(messageHistory []types.ChatMessage, u *types.User, dbid int
 		filecommitsfcdbid.CreateNewFunctionCall(c),
 		deepsummaryfc.CreateNewFunctionCall(c),
 		listfilesforsearchidfc.CreateNewFunctionCall(c),
+		getfilecontentsfc.CreateNewFunctionCall(c),
 	}
 	endResult, err := cypherqueries.PerformDirectoryCypherQuery(fmt.Sprintf("%d", dbid))
 	if err != nil {

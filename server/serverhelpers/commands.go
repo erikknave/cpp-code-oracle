@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/erikknave/go-code-oracle/search"
-	"github.com/erikknave/go-code-oracle/server/chromaclient"
 	"github.com/erikknave/go-code-oracle/server/pgvector"
 	"github.com/erikknave/go-code-oracle/types"
 	"github.com/gofiber/contrib/websocket"
@@ -98,7 +97,7 @@ func PerformSearch(searchStr string) ([]types.SearchableDocument, error) {
 		case "/directories":
 			response, err = search.SearchDirectories(queryString, "", 100)
 			if err != nil {
-				log.Fatalf("Error searching packages: %v", err)
+				log.Fatalf("Error searching directories: %v", err)
 				return nil, err
 			}
 			return response, nil
@@ -116,8 +115,8 @@ func PerformSearch(searchStr string) ([]types.SearchableDocument, error) {
 				return nil, err
 			}
 			return response, nil
-		case "/entities":
-			response, err = search.SearchEntities(queryString, "", 100)
+		case "/codeblocks":
+			response, err = search.SearchCodeblocks(queryString, "", 100)
 			if err != nil {
 				log.Fatalf("Error searching entities: %v", err)
 				return nil, err
@@ -134,17 +133,29 @@ func PerformSearch(searchStr string) ([]types.SearchableDocument, error) {
 			secondWord := words[1]
 
 			switch secondWord {
-			case "packages":
+			case "directories":
 				queryString := strings.Join(words[2:], " ")
-				response = chromaclient.PerformPackageQuery(queryString, 10)
+				response = pgvector.PerformDirectoryQuery(queryString, 10)
 				return response, nil
 			case "files":
 				queryString := strings.Join(words[2:], " ")
-				response = chromaclient.PerformFileQuery(queryString, 10)
+				response = pgvector.PerformFileQuery(queryString, 10)
+				return response, nil
+			case "repositories":
+				queryString := strings.Join(words[2:], " ")
+				response = pgvector.PerformRepositoryQuery(queryString, 10)
+				return response, nil
+			case "all":
+				queryString := strings.Join(words[2:], " ")
+				response = pgvector.PerformQuery(queryString, 10)
+				return response, nil
+			case "containers":
+				queryString := strings.Join(words[2:], " ")
+				response = pgvector.PerformContainerQuery(queryString, 10)
 				return response, nil
 			default:
 				// response = chromaclient.PerformRepositoryQuery(queryString, 10)
-				response = pgvector.PerformSearch(queryString, 10)
+				response = pgvector.PerformQuery(queryString, 10)
 				return response, nil
 			}
 		default:

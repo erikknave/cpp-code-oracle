@@ -33,13 +33,13 @@ func (f *FunctionCall) ToolDefinition() llms.Tool {
 		Type: "function",
 		Function: &llms.FunctionDefinition{
 			Name:        name,
-			Description: "Lists all files within a repository or package based on a search id (the search id must start with repository- or package-)",
+			Description: "Lists all files within a repository or directory based on a search id (the search id must start with repository- or directory-)",
 			Parameters: map[string]any{
 				"type": "object",
 				"properties": map[string]any{
 					"searchId": map[string]any{
 						"type":        "string",
-						"description": "The search id of the repository or package to list files in",
+						"description": "The search id of the repository or directory to list files in",
 					},
 					// "unit": map[string]any{
 					// 	"type": "string",

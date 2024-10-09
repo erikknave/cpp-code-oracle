@@ -61,13 +61,13 @@ func getSearchableDocument(
 		}
 		return searchDocs[0], nil
 	case "directoryAgent":
-		searchString := fmt.Sprintf("package-%d", dbid)
+		searchString := fmt.Sprintf("directory-%d", dbid)
 		searchDocs, err := search.SearchDirectories(searchString, "", 1)
 		if err != nil {
 			return types.SearchableDocument{}, err
 		}
 		if len(searchDocs) == 0 {
-			return types.SearchableDocument{}, fmt.Errorf("no search results for package: %d", dbid)
+			return types.SearchableDocument{}, fmt.Errorf("no search results for directory: %d", dbid)
 		}
 		return searchDocs[0], nil
 	case "fileAgent":

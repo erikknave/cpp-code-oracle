@@ -15,7 +15,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func PerformPackageSearchEndPoint(c *fiber.Ctx) error {
+func PerformDirectorySearchEndPoint(c *fiber.Ctx) error {
 	ctx := context.Background()
 	user := c.Locals("user").(types.User)
 	promptStr := c.FormValue("prompt")

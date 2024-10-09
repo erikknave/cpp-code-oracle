@@ -6,9 +6,10 @@ import (
 
 	"github.com/erikknave/go-code-oracle/agents"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/deepsummaryfc"
+	"github.com/erikknave/go-code-oracle/agents/functioncalls/directoriesshortsummaryfc"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/filecommitsfcdbid"
+	"github.com/erikknave/go-code-oracle/agents/functioncalls/getfilecontentsfc"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/listfilesforsearchidfc"
-	"github.com/erikknave/go-code-oracle/agents/functioncalls/packagesshortsummaryfc"
 	"github.com/erikknave/go-code-oracle/cypher/cypherqueries"
 	"github.com/erikknave/go-code-oracle/types"
 )
@@ -27,7 +28,8 @@ func (a *Agent) Init(messageHistory []types.ChatMessage, u *types.User, dbid int
 		filecommitsfcdbid.CreateNewFunctionCall(c),
 		deepsummaryfc.CreateNewFunctionCall(c),
 		listfilesforsearchidfc.CreateNewFunctionCall(c),
-		packagesshortsummaryfc.CreateNewFunctionCall(u, dbid),
+		directoriesshortsummaryfc.CreateNewFunctionCall(u, dbid),
+		getfilecontentsfc.CreateNewFunctionCall(c),
 	}
 	repoResult, err := cypherqueries.PerformRepoCypherQuery(fmt.Sprintf("%d", dbid))
 	if err != nil {

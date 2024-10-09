@@ -1,4 +1,4 @@
-package entitiessummaryfc
+package codeblockssummaryfc
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	"github.com/tmc/langchaingo/llms"
 )
 
-const name = "EntitiesSummary"
+const name = "CodeblocksSummary"
 
 type FunctionCall struct {
 	Dbid int
@@ -33,13 +33,13 @@ func (f *FunctionCall) ToolDefinition() llms.Tool {
 		Type: "function",
 		Function: &llms.FunctionDefinition{
 			Name:        name,
-			Description: "Returns the summaries of a number of entities(consts, vars, functions, methods, types) within the go file",
+			Description: "Returns the summaries of a number of codeblocks(consts, vars, functions, methods, types) within the go file",
 			Parameters: map[string]any{
 				"type": "object",
 				"properties": map[string]any{
 					"query": map[string]any{
 						"type":        "string",
-						"description": "The query to find the entities related to",
+						"description": "The query to find the codeblocks related to",
 					},
 					// "unit": map[string]any{
 					// 	"type": "string",
@@ -70,7 +70,7 @@ func (f *FunctionCall) Execute(args json.RawMessage) (string, error) {
 // }
 
 const responseTemplate = `
-The following entities were found (presented by relevance):
+The following codeblocks were found (presented by relevance):
 {{range .}}
 - Signature: {{.Signature}}
 - Summary: {{.Summary}}
@@ -81,7 +81,7 @@ The following entities were found (presented by relevance):
 func (f *FunctionCall) Function(queryString string) string {
 	limit := 5
 	dbid := f.Dbid
-	searchDocs, err := search.SearchEntities(queryString, fmt.Sprintf("%d", dbid), limit)
+	searchDocs, err := search.SearchCodeblocks(queryString, fmt.Sprintf("%d", dbid), limit)
 	if err != nil {
 		return fmt.Sprintf("Error in search.SearchFiles: %v", err)
 	}

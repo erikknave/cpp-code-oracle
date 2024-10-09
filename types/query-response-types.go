@@ -20,7 +20,7 @@ type RepoQueryReponseResult struct {
 	Name          string                        `json:"name"`
 	ShortSummary  string                        `json:"shortsummary"`
 	Summary       string                        `json:"summary"`
-	Packages      []RepoQueryResponseDirectory  `json:"directories"`
+	Directories   []RepoQueryResponseDirectory  `json:"directories"`
 	Authors       []string                      `json:"authors"`
 	LatestUpdate  string                        `json:"latestUpdate"`
 	Dbid          int                           `json:"dbid"`
@@ -129,6 +129,9 @@ type CodeblockQueryResponseResult struct {
 	FileDbid              int                               `json:"filedbid"`
 	FileName              string                            `json:"filename"`
 	FileSummary           string                            `json:"filesummary"`
+	Content               string                            `json:"content"`
+	StartOffSet           int                               `json:"startoffset"`
+	EndOffSet             int                               `json:"endoffset"`
 }
 
 type RepoListQueryResult struct {
@@ -143,7 +146,7 @@ type ListFilesResponseResult struct {
 	Files      []struct {
 		ImportPath string `json:"importPath"`
 		// Summary    string `json:"summary"`
-		Dbid string `json:"dbid"`
+		Dbid int    `json:"dbid"`
 		Name string `json:"name"`
 	} `json:"files"`
 }

@@ -92,7 +92,7 @@ templ RepositoryView(repoResult types.RepoQueryReponseResult) {
 						hx-post={ fmt.Sprintf("/perform-directory-search?dbid=%d&type=repository&agentType=repoAgent", repoResult.Dbid) }
 						id="search-packages-container"
 					>
-						for _, pkg := range repoResult.Packages {
+						for _, pkg := range repoResult.Directories {
 							@directoryResult(pkg.ImportPath, pkg.ShortSummary, pkg.Dbid)
 						}
 					</div>

@@ -50,6 +50,8 @@ RETURN {
   signature: cb.signature,
   authors: authors,
   latestUpdate: latestUpdate,
+  startoffset: cb.startOffset,
+  endoffset: cb.endOffset,
   dbid: cb.dbid,
   repodbid: r.dbid,
   reponame: r.name,

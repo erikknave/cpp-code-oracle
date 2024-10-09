@@ -7,7 +7,7 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/erikknave/go-code-oracle/agents/packageagent"
+	"github.com/erikknave/go-code-oracle/agents/directoryagent"
 	"github.com/erikknave/go-code-oracle/helpers"
 	"github.com/erikknave/go-code-oracle/search"
 	"github.com/erikknave/go-code-oracle/types"
@@ -15,7 +15,7 @@ import (
 	"github.com/tmc/langchaingo/llms"
 )
 
-const name = "AskPackageAgent"
+const name = "AskDirectoryAgent"
 
 type FunctionCall struct {
 	AgentType          types.UserAgentType
@@ -46,24 +46,24 @@ func (f FunctionCall) ToolDefinition() llms.Tool {
 		Type: "function",
 		Function: &llms.FunctionDefinition{
 			Name:        name,
-			Description: "Asks a question to the go package agent (specializing and having all information regarding a specific package within the repository). The more information and context the question has, the better the answer.",
+			Description: "Asks a question to the go directory agent (specializing and having all information regarding a specific directory within the repository). The more information and context the question has, the better the answer.",
 			Parameters: map[string]any{
 				"type": "object",
 				"properties": map[string]any{
 					"question": map[string]any{
 						"type":        "string",
-						"description": "The question to ask the package agent.",
+						"description": "The question to ask the directory agent.",
 					},
-					"packageSearchId": map[string]any{
+					"directorySearchId": map[string]any{
 						"type":        "string",
-						"description": "The search id of the package the question is related to.",
+						"description": "The search id of the directory the question is related to.",
 					},
 					// "unit": map[string]any{
 					// 	"type": "string",
 					// 	"enum": []string{"fahrenheit", "celsius"},
 					// },
 				},
-				"required": []string{"question", "packageSearchId"},
+				"required": []string{"question", "directorySearchId"},
 			},
 		},
 	}
@@ -71,17 +71,17 @@ func (f FunctionCall) ToolDefinition() llms.Tool {
 
 func (f FunctionCall) Execute(args json.RawMessage) (string, error) {
 	var params struct {
-		Question        string `json:"question"`
-		PackageSearchId string `json:"packageSearchId"`
+		Question          string `json:"question"`
+		DirectorySearchId string `json:"directorySearchId"`
 	}
 	if err := json.Unmarshal(args, &params); err != nil {
 		return "", err
 	}
 	fmt.Printf("Calling function %s with the following args: %v\n", name, params)
 
-	webhelpers.SendServerMessageToUser(f.Context, &f.User, fmt.Sprintf("A question was sent to the Package agent: %v..\n", helpers.SafeSubstring(params.Question, 150)))
-	response := f.Function(params.Question, params.PackageSearchId)
-	webhelpers.SendServerMessageToUser(f.Context, &f.User, fmt.Sprintf("The Package agent responded: %v..\n", helpers.SafeSubstring(response, 150)))
+	webhelpers.SendServerMessageToUser(f.Context, &f.User, fmt.Sprintf("A question was sent to the Directory agent: %v..\n", helpers.SafeSubstring(params.Question, 150)))
+	response := f.Function(params.Question, params.DirectorySearchId)
+	webhelpers.SendServerMessageToUser(f.Context, &f.User, fmt.Sprintf("The Directory agent responded: %v..\n", helpers.SafeSubstring(response, 150)))
 	return response, nil
 
 }
@@ -92,7 +92,7 @@ func (f FunctionCall) Execute(args json.RawMessage) (string, error) {
 // }
 
 func (f FunctionCall) Function(question string, searchId string) string {
-	agent := &packageagent.Agent{}
+	agent := &directoryagent.Agent{}
 	dbidStr := search.GetDbidFromSearchId(searchId)
 	dbidInt, err := strconv.Atoi(dbidStr)
 	if err != nil {

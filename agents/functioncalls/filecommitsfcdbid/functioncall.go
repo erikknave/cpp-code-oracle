@@ -79,19 +79,19 @@ type queryResponseType struct {
 }
 
 const queryStringRepo = `
-MATCH (r:Repository {dbid:"%s"})-[:HAS_MODULE]->(m:Module)-[:PART_OF_MODULE]-(p)-[:CONTAINS]-(f)-[:AFFECTS]-(fc:FileCommit)
+MATCH (r:REPOSITORY {dbid:"%s"})-[]-(d:DIRECTORY)-[]-(f:FILE)-[]-(fc:FILECOMMIT)
 with {author:fc.authorName, commitDate:fc.commitDate, summary: fc.summary, dbid: r.dbid, fileImportPath: f.repoPath} as commit 
 return collect(commit) as result
 `
 
-const queryStringPackage = `
-MATCH (r:Repository )-[:HAS_MODULE]->(m:Module)-[:PART_OF_MODULE]-(p:Package {dbid:"%s"})-[:CONTAINS]-(f)-[:AFFECTS]-(fc:FileCommit)
+const queryStringDirectory = `
+MATCH (r:REPOSITORY )-[]-(d:DIRECTORY {dbid:"%s"})-[]-(f:FILE)-[]-(fc:FILECOMMIT)
 with {author:fc.authorName, commitDate:fc.commitDate, summary: fc.summary, dbid: p.dbid, fileImportPath: f.repoPath} as commit 
 return collect(commit) as result
 `
 
 const queryStringFile = `
-MATCH (r:Repository )-[:HAS_MODULE]->(m:Module)-[:PART_OF_MODULE]-(p:Package )-[:CONTAINS]-(f: File {dbid:"%s"})-[:AFFECTS]-(fc:FileCommit)
+MATCH (r:REPOSITORY )-[]-(d:DIRECTORY)-[]-(f:FILE  {dbid:"%s"})-[]-(fc:FILECOMMIT)
 with {author:fc.authorName, commitDate:fc.commitDate, summary: fc.summary, dbid: f.dbid, fileImportPath: f.repoPath} as commit 
 return collect(commit) as result
 `
@@ -113,8 +113,8 @@ func (f *FunctionCall) Function(searchId string) string {
 	switch typeOfSearch {
 	case "repository":
 		return repositoryFileCommit(searchId)
-	case "package":
-		return packageFileCommit(searchId)
+	case "directory":
+		return directoryFileCommit(searchId)
 	case "file":
 		return fileFileCommit(searchId)
 
@@ -151,13 +151,13 @@ func repositoryFileCommit(searchId string) string {
 	if err != nil {
 		return fmt.Sprintf("Error in helpers.CreateStringFromTemplate: %v", err)
 	}
-	return fmt.Sprintf("%s", summaryString)
+	return summaryString
 }
 
-func packageFileCommit(searchId string) string {
+func directoryFileCommit(searchId string) string {
 	words := strings.Split(searchId, "-")
 	dbid := words[1]
-	queryString := fmt.Sprintf(queryStringPackage, dbid)
+	queryString := fmt.Sprintf(queryStringDirectory, dbid)
 	cypherResult := cypher.InjectCypher(queryString)
 	cypherResultJson, err := json.Marshal(cypherResult)
 	if err != nil {

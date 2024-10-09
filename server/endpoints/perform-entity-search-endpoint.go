@@ -14,7 +14,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func PerformEntitySearchEndPoint(c *fiber.Ctx) error {
+func PerformCodeblockSearchEndPoint(c *fiber.Ctx) error {
 	ctx := context.Background()
 	promptStr := c.FormValue("prompt")
 	dbidStr := c.Query("dbid")
@@ -35,7 +35,7 @@ func PerformEntitySearchEndPoint(c *fiber.Ctx) error {
 		return ChatViewWrapperEndPoint(c)
 	}
 	if promptStr == "/all" {
-		searchResults, err := search.SearchEntities("", dbidStr, 50)
+		searchResults, err := search.SearchCodeblocks("", dbidStr, 50)
 		if err != nil {
 			fmt.Printf("Error performing search: %v", err)
 
@@ -43,7 +43,7 @@ func PerformEntitySearchEndPoint(c *fiber.Ctx) error {
 		}
 		return webhelpers.RenderHttpComponent(templates.SearchEntitiesContainerWrapper(searchResults, dbid), c, ctx)
 	}
-	searchResults, err := search.SearchEntities(promptStr, dbidStr, 20)
+	searchResults, err := search.SearchCodeblocks(promptStr, dbidStr, 20)
 	if err != nil {
 		fmt.Printf("Error performing search: %v", err)
 		return webhelpers.RenderHttpComponent(templates.SearchEntitiesContainerWrapper(searchResults, dbid), c, ctx)

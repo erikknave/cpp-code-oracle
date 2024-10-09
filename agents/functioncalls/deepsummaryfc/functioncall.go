@@ -38,7 +38,7 @@ func (f *FunctionCall) ToolDefinition() llms.Tool {
 		Type: "function",
 		Function: &llms.FunctionDefinition{
 			Name:        name,
-			Description: "Returns the 'deep' summary based on a search id (a repository, package, file or entity (An entity can be a variable or a function, is a block within a go file",
+			Description: "Returns the 'deep' summary based on a search id (a repository, directory, file or entity (An entity can be a variable or a function, is a block within a go file",
 			Parameters: map[string]any{
 				"type": "object",
 				"properties": map[string]any{

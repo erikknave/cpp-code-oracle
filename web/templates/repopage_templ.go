@@ -259,7 +259,7 @@ func RepositoryView(repoResult types.RepoQueryReponseResult) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		for _, pkg := range repoResult.Packages {
+		for _, pkg := range repoResult.Directories {
 			templ_7745c5c3_Err = directoryResult(pkg.ImportPath, pkg.ShortSummary, pkg.Dbid).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

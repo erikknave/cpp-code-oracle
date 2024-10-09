@@ -16,8 +16,8 @@ func generateHrefString(result types.SearchableDocument) string {
 	switch result.Type {
 	case "repository":
 		return fmt.Sprintf("/repository?user=test&dbid=%d", result.Dbid)
-	case "package":
-		return fmt.Sprintf("/package?user=test&dbid=%d", result.Dbid)
+	case "directory":
+		return fmt.Sprintf("/directory?user=test&dbid=%d", result.Dbid)
 	case "file":
 		return fmt.Sprintf("/file?user=test&dbid=%d", result.Dbid)
 	default:

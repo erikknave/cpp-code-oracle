@@ -45,8 +45,8 @@ func PerformFileCypherQuery(dbid string) (types.FileQueryReponseResult, error) {
 }
 
 const listFilesInRepoQueryTemplate = `
-MATCH (r:REPOSITORY{dbid:"%s"})-[]-(d:DIRECTORY)-[]-(f:FILE)
-WITH r,  collect({importPath: f.repoPath,  dbid: f.dbid, name: f.name}) AS files
+MATCH (r:REPOSITORY{dbid:%s})-[]-(d:DIRECTORY)-[]-(f:FILE)
+WITH r,  collect({importPath: f.importPath,  dbid: f.dbid, name: f.fileName}) AS files
 RETURN {type: 'repository', dbid: r.dbid, importPath: r.name, files: files} AS result
 `
 
@@ -58,9 +58,9 @@ RETURN {type: 'repository', dbid: r.dbid, importPath: r.name, files: files} AS r
 // `
 
 const listFilesInDirectoryQueryTemplate = `
-MATCH (r:REPOSITORY)-[]-(d:DIRECTORY {dbid:"%s"})-[]-(f:File)
-WITH  p, collect({importPath: f.repoPath,  dbid: f.dbid, name: f.name}) AS files
-RETURN {type:'package', dbid: p.dbid,  importPath: p.repoPath, files: files} AS result
+MATCH (r:REPOSITORY)-[]-(d:DIRECTORY {dbid:%s})-[]-(f:FILE)
+WITH  d, collect({importPath: f.importPath,  dbid: f.dbid, name: f.fileName}) AS files
+RETURN {type:'directory', dbid: d.dbid,  importPath: d.importPath, files: files} AS result
 `
 
 func ListFilesBasedOnSearchId(searchId string) (types.ListFilesResponseResult, error) {

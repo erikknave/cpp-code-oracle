@@ -7,20 +7,21 @@ import (
 	"github.com/erikknave/go-code-oracle/agents"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/deepsummaryfc"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/filecommitsfcdbid"
+	"github.com/erikknave/go-code-oracle/agents/functioncalls/getfilecontentsfc"
 	"github.com/erikknave/go-code-oracle/cypher/cypherqueries"
 	"github.com/erikknave/go-code-oracle/types"
 )
 
 const NAME = "fileAgent"
 
-type queryResponseType struct {
-	FileName       string   `json:"fileName"`
-	PackageName    string   `json:"packageName"`
-	RepositoryName string   `json:"repositoryName"`
-	Dbid           string   `json:"dbid"`
-	Summary        string   `json:"summary"`
-	Entities       []string `json:"entities"`
-}
+// type queryResponseType struct {
+// 	FileName       string   `json:"fileName"`
+// 	PackageName    string   `json:"packageName"`
+// 	RepositoryName string   `json:"repositoryName"`
+// 	Dbid           string   `json:"dbid"`
+// 	Summary        string   `json:"summary"`
+// 	Entities       []string `json:"entities"`
+// }
 
 // const systemMsgQueryTemplate = `
 // MATCH (r1:Repository)-[:HAS_MODULE]->(m1:Module)<-[:PART_OF_MODULE]-(p1:Package)-[:CONTAINS]->(f1:File {dbid: "%d"})-[:DEFINES]->(e1:Entity)
@@ -44,6 +45,7 @@ func (a *Agent) Init(messageHistory []types.ChatMessage, u *types.User, dbid int
 	availableTools := []types.FunctionCall{
 		filecommitsfcdbid.CreateNewFunctionCall(c),
 		deepsummaryfc.CreateNewFunctionCall(c),
+		getfilecontentsfc.CreateNewFunctionCall(c),
 	}
 	dbidStr := fmt.Sprintf("%d", dbid)
 	endResult, err := cypherqueries.PerformFileCypherQuery(dbidStr)

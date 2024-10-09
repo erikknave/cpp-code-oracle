@@ -85,10 +85,10 @@ func SearchFilesWithinRepository(query string, dbid string, limit int) ([]types.
 	return results, nil
 }
 
-func SearchEntities(query string, dbid string, limit int) ([]types.SearchableDocument, error) {
-	filterStr := "doc_type = entity"
+func SearchCodeblocks(query string, dbid string, limit int) ([]types.SearchableDocument, error) {
+	filterStr := "doc_type = codeblock"
 	if dbid != "" {
-		filterStr = "doc_type = entity AND file_id = " + dbid
+		filterStr = "doc_type = codeblock AND file_id = " + dbid
 	}
 	results, err := SearchDocuments(query, limit, filterStr)
 	if err != nil {
