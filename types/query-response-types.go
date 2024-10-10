@@ -134,6 +134,42 @@ type CodeblockQueryResponseResult struct {
 	EndOffSet             int                               `json:"endoffset"`
 }
 
+type ContainerQueryResponseResult struct {
+	IsUsedByContainers   []ContainerQueryResponseContainer `json:"is_used_by_containers"`
+	IsUsingContainers    []ContainerQueryResponseContainer `json:"is_using_containers"`
+	ParentContainer      ContainerQueryResponseContainer   `json:"parentContainer"`
+	GrandParentContainer ContainerQueryResponseContainer   `json:"grandParentContainer"`
+	ChildContainers      []ContainerQueryResponseContainer `json:"childContainers"`
+	Name                 string                            `json:"name"`
+	Summary              string                            `json:"summary"`
+	Signature            string                            `json:"signature"`
+	ContainerType        string                            `json:"type"`
+	Authors              []string                          `json:"authors"`
+	LatestUpdate         string                            `json:"latestUpdate"`
+	Dbid                 int                               `json:"dbid"`
+	RepoDbid             int                               `json:"repodbid"`
+	RepoName             string                            `json:"reponame"`
+	RepoShortSummary     string                            `json:"reposhortsummary"`
+}
+
+type ContainerQueryResponseContainer struct {
+	Name          string `json:"name"`
+	Signature     string `json:"signature"`
+	Summary       string `json:"summary"`
+	Dbid          int    `json:"dbid"`
+	Count         int    `json:"count"`
+	ContainerType string `json:"type"`
+}
+
+type ContainerQueryResponseCodeblock struct {
+	Name          string `json:"name"`
+	Signature     string `json:"signature"`
+	Dbid          int    `json:"dbid"`
+	CodeblockType string `json:"type"`
+	RepoDbid      int    `json:"repodbid"`
+	RepoName      string `json:"reponame"`
+}
+
 type RepoListQueryResult struct {
 	Name string `json:"name"`
 	Dbid int    `json:"dbid"`

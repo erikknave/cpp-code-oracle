@@ -29,7 +29,7 @@ func Init() {
 	Index = Client.Index(indexName)
 
 	// Update filterable attributes only if necessary
-	_, err := Index.UpdateFilterableAttributes(&[]string{"doc_type", "dbid", "repository_id", "directory_id", "file_id", "name"})
+	_, err := Index.UpdateFilterableAttributes(&[]string{"doc_type", "dbid", "repository_id", "directory_id", "file_id", "parent_id", "name"})
 	if err != nil {
 		log.Fatalf("Error setting filterable attributes: %v", err)
 	}

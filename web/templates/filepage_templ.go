@@ -171,7 +171,7 @@ func FileView(result types.FileQueryReponseResult) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		for _, pkg := range result.IsUsingFiles {
-			templ_7745c5c3_Err = directoryNameSpan(pkg.ImportPath, pkg.Count, pkg.Dbid).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = fileNameSpan(pkg.ImportPath, pkg.Count, pkg.Dbid).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

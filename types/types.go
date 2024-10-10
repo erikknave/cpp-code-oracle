@@ -66,6 +66,7 @@ type SearchableDocument struct {
 	RepositoryID  int       `json:"repository_id"`
 	PackageID     int       `json:"package_id"`
 	FileID        int       `json:"file_id"`
+	ParentID      int       `json:"parent_id"`
 }
 
 type UserSearchResults struct {

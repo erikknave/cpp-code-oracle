@@ -67,7 +67,7 @@ templ FileView(result types.FileQueryReponseResult) {
 								<div class="flex flex-col justify-center h-full overflow-auto">
 									<div class="h-[35vh]">
 										for _, pkg := range result.IsUsingFiles {
-											@directoryNameSpan(pkg.ImportPath, pkg.Count, pkg.Dbid)
+											@fileNameSpan(pkg.ImportPath, pkg.Count, pkg.Dbid)
 										}
 									</div>
 								</div>

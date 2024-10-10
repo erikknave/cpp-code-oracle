@@ -102,7 +102,7 @@ func directoryNameSpan(packagePath string, count int, id int) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var4 templ.SafeURL = templ.URL(fmt.Sprintf("/package?user=test&dbid=%d", id))
+			var templ_7745c5c3_Var4 templ.SafeURL = templ.URL(fmt.Sprintf("/directory?user=test&dbid=%d", id))
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var4)))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

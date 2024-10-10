@@ -130,7 +130,7 @@ templ StatsView(stats *types.Stats) {
 											Most depended on directory
 										</div>
 										<div class="text-2xl">
-											<a href={ templ.URL(fmt.Sprintf("/package?user=test&dbid=%d", stats.MostDependedOn.Dbid)) }>{ stats.MostDependedOn.Name }</a>
+											<a href={ templ.URL(fmt.Sprintf("/directory?user=test&dbid=%d", stats.MostDependedOn.Dbid)) }>{ stats.MostDependedOn.Name }</a>
 										</div>
 										<div class="text-xs italic">
 											{ fmt.Sprintf("%d",stats.MostDependedOn.Count) } other directories depend on this
@@ -141,13 +141,13 @@ templ StatsView(stats *types.Stats) {
 								<div class="flex flex-col px-8">
 									<div class="border border-white p-2 rounded ">
 										<div>
-											Repository with most other dependencies
+											Directory with most other dependencies
 										</div>
 										<div class="text-2xl">
-											<a href={ templ.URL(fmt.Sprintf("/package?user=test&dbid=%d", stats.MostDependencies.Dbid)) }>{ stats.MostDependencies.Name }</a>
+											<a href={ templ.URL(fmt.Sprintf("/directory?user=test&dbid=%d", stats.MostDependencies.Dbid)) }>{ stats.MostDependencies.Name }</a>
 										</div>
 										<div class="text-xs italic">
-											{ fmt.Sprintf("%d",stats.MostDependencies.Count) } dependencies to other repos
+											{ fmt.Sprintf("%d",stats.MostDependencies.Count) } dependencies to other directories
 										</div>
 									</div>
 									<div class="p-1"></div>

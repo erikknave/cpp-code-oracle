@@ -202,7 +202,7 @@ func CodeblockView(result types.CodeblockQueryResponseResult) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var11 templ.SafeURL = templ.URL(fmt.Sprintf("/package?user=test&dbid=%d", result.DirectoryDbid))
+		var templ_7745c5c3_Var11 templ.SafeURL = templ.URL(fmt.Sprintf("/directory?user=test&dbid=%d", result.DirectoryDbid))
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var11)))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -214,7 +214,7 @@ func CodeblockView(result types.CodeblockQueryResponseResult) templ.Component {
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(GetAfterSecondSlash(result.DirectoryImportPath))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/codeblockpage.templ`, Line: 86, Col: 145}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/codeblockpage.templ`, Line: 86, Col: 147}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {

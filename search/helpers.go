@@ -43,7 +43,7 @@ func SearchDirectories(query string, dbid string, limit int) ([]types.Searchable
 func SearchFiles(query string, dbid string, limit int) ([]types.SearchableDocument, error) {
 	filterStr := "doc_type = file"
 	if dbid != "" {
-		filterStr = "doc_type = file AND name != 'NON_EXISTING_FILE.go' AND package_id = " + dbid
+		filterStr = "doc_type = file AND name != 'NON_EXISTING_FILE.go' AND directory_id = " + dbid
 	}
 	results, err := SearchDocuments(query, limit, filterStr)
 	if err != nil {
@@ -55,7 +55,7 @@ func SearchFiles(query string, dbid string, limit int) ([]types.SearchableDocume
 func SearchContainers(query string, dbid string, limit int) ([]types.SearchableDocument, error) {
 	filterStr := "doc_type = container"
 	if dbid != "" {
-		filterStr = "doc_type = container AND name != 'NON_EXISTING_FILE.go' AND repository_id = " + dbid
+		filterStr = "doc_type = container AND parent_id = " + dbid
 	}
 	results, err := SearchDocuments(query, limit, filterStr)
 	if err != nil {

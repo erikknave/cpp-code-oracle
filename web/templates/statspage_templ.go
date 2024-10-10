@@ -241,7 +241,7 @@ func StatsView(stats *types.Stats) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var12 templ.SafeURL = templ.URL(fmt.Sprintf("/package?user=test&dbid=%d", stats.MostDependedOn.Dbid))
+		var templ_7745c5c3_Var12 templ.SafeURL = templ.URL(fmt.Sprintf("/directory?user=test&dbid=%d", stats.MostDependedOn.Dbid))
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var12)))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -253,7 +253,7 @@ func StatsView(stats *types.Stats) templ.Component {
 		var templ_7745c5c3_Var13 string
 		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(stats.MostDependedOn.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/statspage.templ`, Line: 133, Col: 130}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/statspage.templ`, Line: 133, Col: 132}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
@@ -272,11 +272,11 @@ func StatsView(stats *types.Stats) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" other directories depend on this</div></div><div class=\"p-1\"></div></div><div class=\"flex flex-col px-8\"><div class=\"border border-white p-2 rounded \"><div>Repository with most other dependencies</div><div class=\"text-2xl\"><a href=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" other directories depend on this</div></div><div class=\"p-1\"></div></div><div class=\"flex flex-col px-8\"><div class=\"border border-white p-2 rounded \"><div>Directory with most other dependencies</div><div class=\"text-2xl\"><a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var15 templ.SafeURL = templ.URL(fmt.Sprintf("/package?user=test&dbid=%d", stats.MostDependencies.Dbid))
+		var templ_7745c5c3_Var15 templ.SafeURL = templ.URL(fmt.Sprintf("/directory?user=test&dbid=%d", stats.MostDependencies.Dbid))
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var15)))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -288,7 +288,7 @@ func StatsView(stats *types.Stats) templ.Component {
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(stats.MostDependencies.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/statspage.templ`, Line: 147, Col: 134}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/statspage.templ`, Line: 147, Col: 136}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -307,7 +307,7 @@ func StatsView(stats *types.Stats) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" dependencies to other repos</div></div><div class=\"p-1\"></div></div></div></div></div></div></div><div class=\"  flex flex-col py-2\"><div class=\" text-center p-2\">Enter /help for commands</div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" dependencies to other directories</div></div><div class=\"p-1\"></div></div></div></div></div></div></div><div class=\"  flex flex-col py-2\"><div class=\" text-center p-2\">Enter /help for commands</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

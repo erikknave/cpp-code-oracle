@@ -30,7 +30,7 @@ templ DirectoryPage(result types.DirectoryQueryReponseResult) {
 templ directoryNameSpan(packagePath string, count int, id int) {
 	if id > 0 {
 		<p class="text-center" hx-boost="true">
-			<a href={ templ.URL(fmt.Sprintf("/package?user=test&dbid=%d", id)) }>
+			<a href={ templ.URL(fmt.Sprintf("/directory?user=test&dbid=%d", id)) }>
 				{ GetAfterSecondSlash(packagePath) } ({ fmt.Sprintf("%d",count ) })
 			</a>
 		</p>

@@ -20,6 +20,8 @@ func generateHrefString(result types.SearchableDocument) string {
 		return fmt.Sprintf("/directory?user=test&dbid=%d", result.Dbid)
 	case "file":
 		return fmt.Sprintf("/file?user=test&dbid=%d", result.Dbid)
+	case "container":
+		return fmt.Sprintf("/container?user=test&dbid=%d", result.Dbid)
 	default:
 		return fmt.Sprintf("/repository?user=test&dbid=%d", result.Dbid)
 	}
@@ -45,7 +47,7 @@ templ searchResultNameRow(result types.SearchableDocument) {
 		if result.Type == "entity" {
 			<div><span class="font-bold">Entity</span>: { result.Path }: { result.Name }</div>
 		} else if result.Type == "container" {
-			<div><span class="font-bold">Container ({ result.ContainerType })</span>: { result.Signature }</div>
+			<div><span class="font-bold">{ result.ContainerType }</span>: <a href={ templ.URL(generateHrefString(result)) }>{ result.Signature }</a> </div>
 		} else {
 			<div><span class="font-bold">{ generateTypeName(result.Type) }</span>: <a href={ templ.URL(generateHrefString(result)) }>{ result.Path }</a></div>
 		}

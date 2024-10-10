@@ -1,5 +1,5 @@
 **/sqlite.db
-**/.env
-.env
+**/.env*
+.env*
 sqlite.db
 

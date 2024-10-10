@@ -83,7 +83,7 @@ templ CodeblockView(result types.CodeblockQueryResponseResult) {
 								</div>
 								<div class="w-[50%] border-r border-white h-[2vh]"></div>
 								<div class="border border-white text-center flex flex-col justify-center rounded h-[10vh] ">
-									<a href={ templ.URL(fmt.Sprintf("/package?user=test&dbid=%d", result.DirectoryDbid)) }>{ GetAfterSecondSlash(result.DirectoryImportPath) }</a>
+									<a href={ templ.URL(fmt.Sprintf("/directory?user=test&dbid=%d", result.DirectoryDbid)) }>{ GetAfterSecondSlash(result.DirectoryImportPath) }</a>
 								</div>
 								<div class="w-[50%] border-r border-white h-[2vh]"></div>
 								<div class="border border-white flex flex-col justify-center text-center rounded h-[10vh]">
