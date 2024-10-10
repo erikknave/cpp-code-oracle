@@ -9,11 +9,10 @@ WITH repositoryCount, directoryCount, fileCount, COUNT(cb) AS codeblockCount
 MATCH (c:CONTAINER)
 WITH repositoryCount, directoryCount, fileCount, codeblockCount, COUNT(c) AS containerCount
 MATCH (fc:FILECOMMIT)
-WITH repositoryCount, directoryCount, fileCount, codeblockCount,containerCount, count(fc) as fileCommitCount, COUNT(DISTINCT fc.authorName) AS authorCount
+WITH repositoryCount, directoryCount, fileCount, codeblockCount, containerCount, COUNT(fc) AS fileCommitCount, COUNT(DISTINCT fc.authorName) AS authorCount
 MATCH ()-[r]->()
 WITH repositoryCount, directoryCount, fileCount, codeblockCount, containerCount, fileCommitCount, authorCount, COUNT(r) AS relationshipCount
 
-// Subquery for most depended on repository
 CALL {
     MATCH (d1:DIRECTORY)-[:IS_LOCATED_IN]-(f1:FILE)-[:IS_DEFINED_IN]-(cd1:CODEBLOCK)-[:calls|has_type]->(cd2:CODEBLOCK)-[:IS_DEFINED_IN]-(f2:FILE)-[:IS_LOCATED_IN]-(d2:DIRECTORY)
     WHERE f1 <> f2
@@ -23,7 +22,6 @@ CALL {
     RETURN d2.name AS mostDependedOnName, d2.dbid AS mostDependedOnDbid, dependedOnByCount AS mostDependedOnCount
 }
 
-// Subquery for repository with most dependencies
 CALL {
     MATCH (d1:DIRECTORY)<-[:IS_LOCATED_IN]-(f1:FILE)<-[:IS_DEFINED_IN]-(cd1:CODEBLOCK)-[:calls|has_type]->(cd2:CODEBLOCK)-[:IS_DEFINED_IN]->(f2:FILE)-[:IS_LOCATED_IN]->(d2:DIRECTORY)
     WHERE f1 <> f2
@@ -33,8 +31,27 @@ CALL {
     RETURN d1.name AS mostDependenciesName, d1.dbid AS mostDependenciesDbid, dependenciesByCount AS mostDependenciesCount
 }
 
-WITH repositoryCount, directoryCount, fileCount, codeblockCount, containerCount, relationshipCount, fileCommitCount, authorCount, mostDependedOnName, mostDependedOnDbid, mostDependedOnCount, mostDependenciesName, mostDependenciesDbid, mostDependenciesCount
+CALL {
+    MATCH (c1:CONTAINER)<-[:IMPLEMENTS]-(cd1:CODEBLOCK)-[:calls|has_type]->(cd2:CODEBLOCK)-[:IMPLEMENTS]->(c2:CONTAINER)
+    WHERE c1 <> c2
+    WITH c2, COUNT(DISTINCT c1) AS dependedOnByCount
+    ORDER BY dependedOnByCount DESC
+    LIMIT 1
+    RETURN c2.name AS mostDependedOnContainerName, c2.dbid AS mostDependedOnContainerDbid, dependedOnByCount AS mostDependedOnContainerCount, c2.containerType as mostDependedOnContainerType, c2.signature as mostDependedOnContainerSignature
+}
 
+CALL {
+    MATCH (c1:CONTAINER)<-[:IMPLEMENTS]-(cd1:CODEBLOCK)-[:calls|has_type]->(cd2:CODEBLOCK)-[:IMPLEMENTS]->(c2:CONTAINER)
+    WHERE c1 <> c2 AND NOT c1.name = "GLOBAL_NAMESPACE_ENTITY" AND NOT c1.name = "stingray" AND NOT c1.containerType = "variable"
+    WITH c1, COUNT(DISTINCT c2) AS dependenciesByCount
+    ORDER BY dependenciesByCount DESC
+    LIMIT 1
+    RETURN c1.name AS mostDependenciesContainerName, c1.dbid AS mostDependenciesContainerDbid, dependenciesByCount AS mostDependenciesContainerCount, c1.containerType AS mostDependenciesContainerType, c1.signature as mostDependenciesContainerSignature
+}
+
+WITH repositoryCount, directoryCount, fileCount, codeblockCount, containerCount, relationshipCount, fileCommitCount, authorCount, 
+mostDependedOnName, mostDependedOnDbid, mostDependedOnCount, mostDependenciesName, mostDependenciesDbid, mostDependenciesCount, 
+mostDependedOnContainerName, mostDependedOnContainerDbid, mostDependedOnContainerCount, mostDependedOnContainerType, mostDependedOnContainerSignature, mostDependenciesContainerName, mostDependenciesContainerDbid, mostDependenciesContainerCount, mostDependenciesContainerType, mostDependenciesContainerSignature
 
 RETURN {
   repositories: repositoryCount,
@@ -46,5 +63,7 @@ RETURN {
   authors: authorCount,
   relationships: relationshipCount,
   mostDependedOn: {name: mostDependedOnName, dbid: mostDependedOnDbid, count: mostDependedOnCount},
-  mostDependencies: {name: mostDependenciesName, dbid: mostDependenciesDbid, count: mostDependenciesCount}
+  mostDependencies: {name: mostDependenciesName, dbid: mostDependenciesDbid, count: mostDependenciesCount},
+  mostDependedOnContainer: {name: mostDependedOnContainerName, dbid: mostDependedOnContainerDbid, count: mostDependedOnContainerCount, type: mostDependedOnContainerType, signature: mostDependedOnContainerSignature},
+  mostDependenciesContainer: {name: mostDependenciesContainerName, dbid: mostDependenciesContainerDbid, count: mostDependenciesContainerCount, type: mostDependenciesContainerType, signature: mostDependenciesContainerSignature}
 } AS results

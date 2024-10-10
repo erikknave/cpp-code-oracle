@@ -82,12 +82,22 @@ templ StatsView(stats *types.Stats) {
 								<div class="p-1"></div>
 								<div class="border border-white p-2 rounded ">
 									<div>
+										Documented Containers
+									</div>
+									<div class="text-5xl">
+										{ prettyPrintInt(stats.Containers) }
+									</div>
+									<div>Variables, functions, etc.</div>
+								</div>
+								<div class="p-1"></div>
+								<div class="border border-white p-2 rounded ">
+									<div>
 										Documented Code blocks
 									</div>
 									<div class="text-5xl">
 										{ prettyPrintInt(stats.Codeblocks) }
 									</div>
-									<div>Variables, functions, etc.</div>
+									// <div>Variables, functions, etc.</div>
 								</div>
 								<div class="p-1"></div>
 								<div class="border border-white p-2 rounded ">
@@ -148,6 +158,34 @@ templ StatsView(stats *types.Stats) {
 										</div>
 										<div class="text-xs italic">
 											{ fmt.Sprintf("%d",stats.MostDependencies.Count) } dependencies to other directories
+										</div>
+									</div>
+									<div class="p-1"></div>
+								</div>
+								<div class="flex flex-col  px-8">
+									<div class="border border-white p-2 rounded ">
+										<div>
+											Most depended on container (non-variable)
+										</div>
+										<div class="text-2xl">
+											<a href={ templ.URL(fmt.Sprintf("/container?user=test&dbid=%d", stats.MostDependedOnContainer.Dbid)) }>{ stats.MostDependedOnContainer.Name }</a>
+										</div>
+										<div class="text-xs italic">
+											{ fmt.Sprintf("%d",stats.MostDependedOn.Count) } other containers depend on this
+										</div>
+									</div>
+									<div class="p-1"></div>
+								</div>
+								<div class="flex flex-col px-8">
+									<div class="border border-white p-2 rounded ">
+										<div>
+											Container (non-variable) with most other dependencies
+										</div>
+										<div class="text-2xl">
+											<a href={ templ.URL(fmt.Sprintf("/container?user=test&dbid=%d", stats.MostDependenciesContainer.Dbid)) }>{ stats.MostDependenciesContainer.Name }</a>
+										</div>
+										<div class="text-xs italic">
+											{ fmt.Sprintf("%d",stats.MostDependencies.Count) } dependencies to other containers
 										</div>
 									</div>
 									<div class="p-1"></div>

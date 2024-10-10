@@ -171,7 +171,7 @@ func ContainerView(result types.ContainerQueryResponseResult) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if len(result.IsUsingContainers) == 0 {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-full text-center h-full pt-[15vh]\">No containers found</div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-full text-center h-full pt-[15vh]\">No non-variable containers found</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -304,7 +304,7 @@ func ContainerView(result types.ContainerQueryResponseResult) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if len(result.IsUsingContainers) == 0 {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-full text-center h-full pt-[15vh]\">No containers found</div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-full text-center h-full pt-[15vh]\">No non-variable containers found</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -188,19 +188,30 @@ type ListFilesResponseResult struct {
 }
 
 type Stats struct {
-	Repositories     int                 `json:"repositories"`
-	Directories      int                 `json:"directories"`
-	Files            int                 `json:"files"`
-	Codeblocks       int                 `json:"codeblocks"`
-	FileCommits      int                 `json:"fileCommits"`
-	Authors          int                 `json:"authors"`
-	Relationships    int                 `json:"relationships"`
-	MostDependedOn   StatsRepositoryInfo `json:"mostDependedOn"`
-	MostDependencies StatsRepositoryInfo `json:"mostDependencies"`
+	Repositories              int                 `json:"repositories"`
+	Directories               int                 `json:"directories"`
+	Files                     int                 `json:"files"`
+	Codeblocks                int                 `json:"codeblocks"`
+	Containers                int                 `json:"containers"`
+	FileCommits               int                 `json:"fileCommits"`
+	Authors                   int                 `json:"authors"`
+	Relationships             int                 `json:"relationships"`
+	MostDependedOn            StatsRepositoryInfo `json:"mostDependedOn"`
+	MostDependencies          StatsRepositoryInfo `json:"mostDependencies"`
+	MostDependedOnContainer   StatsContainerInfo  `json:"mostDependedOnContainer"`
+	MostDependenciesContainer StatsContainerInfo  `json:"mostDependenciesContainer"`
 }
 
 type StatsRepositoryInfo struct {
 	Name  string `json:"name"`
 	Dbid  int    `json:"dbid"`
 	Count int    `json:"count"`
+}
+
+type StatsContainerInfo struct {
+	Name          string `json:"name"`
+	Signature     string `json:"signature"`
+	ContainerType string `json:"type"`
+	Dbid          int    `json:"dbid"`
+	Count         int    `json:"count"`
 }
