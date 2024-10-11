@@ -73,7 +73,7 @@ type queryResponseType struct {
 }
 
 const queryString = `
-MATCH (r:REPOSITORY )-[]-(d:DIRECTORY)-[]-(f:FILE  {dbid:"%s"})-[]-(fc:FILECOMMIT)
+MATCH (r:REPOSITORY )-[]-(d:DIRECTORY)-[]-(f:FILE  {dbid:%d})-[]-(fc:FILECOMMIT)
 with {author:fc.authorName, commitDate:fc.commitDate, summary: fc.summary} as commit 
 return collect(commit) as result
 `
