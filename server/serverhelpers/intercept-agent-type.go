@@ -80,6 +80,16 @@ func getSearchableDocument(
 			return types.SearchableDocument{}, fmt.Errorf("no search results for file: %d", dbid)
 		}
 		return searchDocs[0], nil
+	case "containerAgent":
+		searchString := fmt.Sprintf("container-%d", dbid)
+		searchDocs, err := search.SearchContainers(searchString, "", 1)
+		if err != nil {
+			return types.SearchableDocument{}, err
+		}
+		if len(searchDocs) == 0 {
+			return types.SearchableDocument{}, fmt.Errorf("no search results for container: %d", dbid)
+		}
+		return searchDocs[0], nil
 	}
 	return types.SearchableDocument{}, fmt.Errorf("unknown agent type: %s", agentTypeString)
 }

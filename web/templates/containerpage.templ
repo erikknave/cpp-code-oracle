@@ -125,7 +125,7 @@ templ ContainerView(result types.ContainerQueryResponseResult) {
 						@SearchContainersPrompt(result.Dbid)
 					</div>
 					<div class="p-1 "></div>
-					<div class="p-1 border rounded border-white" hx-post={ fmt.Sprintf("/perform-container-search?dbid=%d&type=file&agentType=fileAgent", result.Dbid) } id="search-containers-container">
+					<div class="p-1 border rounded border-white" hx-post={ fmt.Sprintf("/perform-container-search?dbid=%d&type=container&agentType=containerAgent", result.Dbid) } id="search-containers-container">
 						if len(result.ChildContainers) == 0 {
 							<div class="text-center">No child containers found</div>
 						} else {

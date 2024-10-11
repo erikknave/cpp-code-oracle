@@ -77,12 +77,14 @@ The import path of the file is {{.ImportPath}}.
 The file is located in the repository {{.RepoName}} with search id repository-{{.RepoDbid}} and in the directory {{.DirectoryImportPath}} with search id directory-{{.DirectoryDbid}}.
 The summary of the file is: {{.Summary}}
 
-Here is a list of all variables, constants, functions, types and methods  within the file:
+Here is a list of all codeblocks, i.e. variables, constants, functions, types and methods  within the file:
 {{- range .Entities}}
-Name: {{  .Name }}
+Name: {{ .Name }}
 Signature: {{ .Signature }}
-Search id (not shown to user): entity-{{ .Dbid }}
+Search id (not shown to user): codeblock-{{ .Dbid }}
+{{ if .Summary }}
 Summary: {{ .Summary }}
+{{ end }}
 {{- end }}
 
 `

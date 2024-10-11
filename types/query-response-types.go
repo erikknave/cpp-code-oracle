@@ -170,6 +170,26 @@ type ContainerQueryResponseCodeblock struct {
 	RepoName      string `json:"reponame"`
 }
 
+type ContainerAgentQueryResponseResult struct {
+	Codeblocks    []ContainerAgentQueryResponseCodeblock `json:"codeblocks"`
+	Name          string                                 `json:"name"`
+	Summary       string                                 `json:"summary"`
+	Signature     string                                 `json:"signature"`
+	ContainerType string                                 `json:"type"`
+	Dbid          int                                    `json:"dbid"`
+	RepoDbid      int                                    `json:"repodbid"`
+	RepoName      string                                 `json:"reponame"`
+	RepoSummary   string                                 `json:"reposhortsummary"`
+}
+
+type ContainerAgentQueryResponseCodeblock struct {
+	Signature      string `json:"signature"`
+	Dbid           int    `json:"dbid"`
+	FileImportPath string `json:"fileimportpath"`
+	FileDbid       int    `json:"filedbid"`
+	FileSummary    string `json:"filesummary"`
+}
+
 type RepoListQueryResult struct {
 	Name string `json:"name"`
 	Dbid int    `json:"dbid"`

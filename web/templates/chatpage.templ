@@ -22,6 +22,8 @@ func chatViewHeadline(agentType types.UserAgentType, searchDoc types.SearchableD
 		return fmt.Sprintf("Chat scope: Directory %s", searchDoc.Name)
 	case "fileAgent":
 		return fmt.Sprintf("Chat scope: File %s", searchDoc.Name)
+	case "containerAgent":
+		return fmt.Sprintf("Chat scope: Container (%s) %s", searchDoc.ContainerType, searchDoc.Name)
 	default:
 		return "Chat scope not known (probably an error has occurred)"
 	}
@@ -38,6 +40,8 @@ func getScopeTypeString(agentType types.UserAgentType) string {
 		return fmt.Sprintf("Directory")
 	case "fileAgent":
 		return fmt.Sprintf("File")
+	case "containerAgent":
+		return fmt.Sprintf("Container")
 	default:
 		return "Chat scope not known (probably an error occurred)"
 	}

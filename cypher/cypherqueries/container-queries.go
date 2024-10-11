@@ -46,7 +46,7 @@ func PerformContainerCypherQuery(dbid string) (types.ContainerQueryResponseResul
 //go:embed container-agent-query.cql
 var containerAgentQueryTemplate string
 
-func PerformContainerAgentCypherQuery(dbid string) (types.ContainerQueryResponseResult, error) {
+func PerformContainerAgentCypherQuery(dbid string) (types.ContainerAgentQueryResponseResult, error) {
 	dbidStr := dbid
 	queryParams := struct {
 		DBID string
@@ -66,10 +66,10 @@ func PerformContainerAgentCypherQuery(dbid string) (types.ContainerQueryResponse
 	resultString := result.String()
 	cypherResult := cypher.InjectCypher(resultString)
 	cypherResultJson, _ := json.Marshal(cypherResult)
-	var typedResult []types.ContainerQueryResponseResult
+	var typedResult []types.ContainerAgentQueryResponseResult
 	err = json.Unmarshal(cypherResultJson, &typedResult)
 	if err != nil {
-		return types.ContainerQueryResponseResult{}, err
+		return types.ContainerAgentQueryResponseResult{}, err
 	}
 	finalResult := typedResult[0]
 	return finalResult, nil

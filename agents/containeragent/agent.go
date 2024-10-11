@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/erikknave/go-code-oracle/agents"
+	"github.com/erikknave/go-code-oracle/agents/functioncalls/getcodeblockcontentsfc"
 	"github.com/erikknave/go-code-oracle/cypher/cypherqueries"
 	"github.com/erikknave/go-code-oracle/types"
 )
@@ -25,8 +26,11 @@ func (a *Agent) Init(messageHistory []types.ChatMessage, u *types.User, dbid int
 		// listfilesforsearchidfc.CreateNewFunctionCall(c),
 		// directoriesshortsummaryfc.CreateNewFunctionCall(u, dbid),
 		// getfilecontentsfc.CreateNewFunctionCall(c),
+		// filedeepsummaryfc.CreateNewFunctionCall(c),
+		// getfilecontentsfc.CreateNewFunctionCall(c),
+		getcodeblockcontentsfc.CreateNewFunctionCall(c),
 	}
-	repoResult, err := cypherqueries.PerformRepoCypherQuery(fmt.Sprintf("%d", dbid))
+	repoResult, err := cypherqueries.PerformContainerAgentCypherQuery(fmt.Sprintf("%d", dbid))
 	if err != nil {
 		return err
 	}

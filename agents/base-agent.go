@@ -53,6 +53,7 @@ func (a *BaseAgent) InitBaseAgent(
 	if err != nil {
 		return
 	}
+	println(result.String())
 
 	a.SystemMessage = result.String()
 }

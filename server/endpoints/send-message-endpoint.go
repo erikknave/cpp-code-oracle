@@ -88,6 +88,8 @@ func StartCodeAgentFlow(c context.Context) error {
 		return agentflows.StartDirectoryAgentFlow(messageHistory, user, c, promptStr)
 	case "fileAgent":
 		return agentflows.StartFileAgentFlow(messageHistory, user, c, promptStr)
+	case "containerAgent":
+		return agentflows.StartContainerAgentFlow(messageHistory, user, c, promptStr)
 	}
 
 	fmt.Printf("Unknown agent type: %s\n", userAgentType.AgentType)
