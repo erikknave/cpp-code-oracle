@@ -65,6 +65,7 @@ type SearchableDocument struct {
 	EndOffset     int       `json:"end_offset"`
 	RepositoryID  int       `json:"repository_id"`
 	PackageID     int       `json:"package_id"`
+	DirectoryID   int       `json:"directory_id"`
 	FileID        int       `json:"file_id"`
 	ParentID      int       `json:"parent_id"`
 }

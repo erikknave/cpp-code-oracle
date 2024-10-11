@@ -3,6 +3,7 @@ package pgvector
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 
@@ -90,6 +91,12 @@ func PerformDirectoryQuery(queryString string, numDocuments int) []types.Searcha
 func PerformFileQuery(queryString string, numDocuments int) []types.SearchableDocument {
 	// Call performSearchWithFilter with a filter for repositories
 	filter := map[string]interface{}{"doc_type": "file"}
+	return performSearchWithFilter(queryString, numDocuments, filter)
+}
+
+func PerformFileQueryPerDirectory(queryString string, numDocuments int, directoryId int) []types.SearchableDocument {
+	// Call performSearchWithFilter with a filter for repositories
+	filter := map[string]interface{}{"doc_type": "file", "directory_id": fmt.Sprintf("%d", directoryId)}
 	return performSearchWithFilter(queryString, numDocuments, filter)
 }
 

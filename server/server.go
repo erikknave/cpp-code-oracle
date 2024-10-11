@@ -43,6 +43,7 @@ func ServerInit() {
 	app.Post("/perform-directory-search", endpoints.PerformDirectorySearchEndPoint)
 	app.Post("/perform-codeblock-search", endpoints.PerformCodeblockSearchEndPoint)
 	app.Post("/perform-container-search", endpoints.PerformContainerSearchEndPoint)
+	app.Post("/haja-message", endpoints.HajaMessageEndpoint)
 	app.Get("/repository", endpoints.RepositoryPageEndPoint)
 	app.Get("/directory", endpoints.DirectoryPageEndPoint)
 	app.Get("/container", endpoints.ContainerPageEndPoint)

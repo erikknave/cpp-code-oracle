@@ -11,8 +11,8 @@ import (
 )
 
 const repoListQueryTemplate = `
-MATCH (r:Repository) where NOT r.name CONTAINS 'DUMMY_'
-WITH {name: r.name, dbid: r.dbid} AS repo
+MATCH (r:REPOSITORY) where NOT r.name CONTAINS 'DUMMY_'
+WITH {name: r.name, dbid: r.dbid, summary: r.summary} AS repo
 RETURN collect(repo) AS result
 `
 

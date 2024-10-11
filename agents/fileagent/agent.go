@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/erikknave/go-code-oracle/agents"
-	"github.com/erikknave/go-code-oracle/agents/functioncalls/deepsummaryfc"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/filecommitsfcdbid"
+	"github.com/erikknave/go-code-oracle/agents/functioncalls/getcodeblockcontentsfc"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/getfilecontentsfc"
 	"github.com/erikknave/go-code-oracle/cypher/cypherqueries"
 	"github.com/erikknave/go-code-oracle/types"
@@ -44,8 +44,9 @@ type Agent struct {
 func (a *Agent) Init(messageHistory []types.ChatMessage, u *types.User, dbid int, c context.Context) {
 	availableTools := []types.FunctionCall{
 		filecommitsfcdbid.CreateNewFunctionCall(c),
-		deepsummaryfc.CreateNewFunctionCall(c),
+		// deepsummaryfc.CreateNewFunctionCall(c),
 		getfilecontentsfc.CreateNewFunctionCall(c),
+		getcodeblockcontentsfc.CreateNewFunctionCall(c),
 	}
 	dbidStr := fmt.Sprintf("%d", dbid)
 	endResult, err := cypherqueries.PerformFileCypherQuery(dbidStr)

@@ -7,7 +7,7 @@ import (
 
 func AuthMiddleware(ctx *fiber.Ctx) error {
 	path := ctx.Path()
-	nonProtectedPaths := []string{"/login", "/signup"}
+	nonProtectedPaths := []string{"/login", "/signup", "/haja-message"}
 	for _, nonProtectedPath := range nonProtectedPaths {
 		if path == nonProtectedPath {
 			return ctx.Next()

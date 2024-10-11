@@ -5,11 +5,8 @@ import (
 	"fmt"
 
 	"github.com/erikknave/go-code-oracle/agents"
-	"github.com/erikknave/go-code-oracle/agents/functioncalls/deepsummaryfc"
-	"github.com/erikknave/go-code-oracle/agents/functioncalls/filecommitsfcdbid"
-	"github.com/erikknave/go-code-oracle/agents/functioncalls/fileshortsummaryfc"
+	"github.com/erikknave/go-code-oracle/agents/functioncalls/fileembeddingssearchperdirectoryfc"
 	"github.com/erikknave/go-code-oracle/agents/functioncalls/getfilecontentsfc"
-	"github.com/erikknave/go-code-oracle/agents/functioncalls/listfilesforsearchidfc"
 	"github.com/erikknave/go-code-oracle/cypher/cypherqueries"
 	"github.com/erikknave/go-code-oracle/types"
 )
@@ -37,10 +34,11 @@ type Agent struct {
 
 func (a *Agent) Init(messageHistory []types.ChatMessage, u *types.User, dbid int, c context.Context) {
 	availableTools := []types.FunctionCall{
-		fileshortsummaryfc.CreateNewFunctionCall(u, dbid),
-		filecommitsfcdbid.CreateNewFunctionCall(c),
-		deepsummaryfc.CreateNewFunctionCall(c),
-		listfilesforsearchidfc.CreateNewFunctionCall(c),
+		fileembeddingssearchperdirectoryfc.CreateNewFunctionCall(c, dbid),
+		// fileshortsummaryfc.CreateNewFunctionCall(u, dbid),
+		// filecommitsfcdbid.CreateNewFunctionCall(c),
+		// deepsummaryfc.CreateNewFunctionCall(c),
+		// listfilesforsearchidfc.CreateNewFunctionCall(c),
 		getfilecontentsfc.CreateNewFunctionCall(c),
 	}
 	endResult, err := cypherqueries.PerformDirectoryCypherQuery(fmt.Sprintf("%d", dbid))

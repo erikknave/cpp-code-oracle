@@ -155,11 +155,11 @@ func PerformSearch(searchStr string) ([]types.SearchableDocument, error) {
 				return response, nil
 			default:
 				// response = chromaclient.PerformRepositoryQuery(queryString, 10)
-				response = pgvector.PerformQuery(queryString, 10)
+				response = pgvector.PerformFileQuery(queryString, 10)
 				return response, nil
 			}
 		default:
-			response, err = search.SearchReporisitories(queryString, 100)
+			response, err = search.SearchFiles(queryString, "", 50)
 			if err != nil {
 				log.Fatalf("Error searching documents: %v", err)
 				return nil, err
@@ -169,7 +169,7 @@ func PerformSearch(searchStr string) ([]types.SearchableDocument, error) {
 
 	} else {
 		queryString := words[0]
-		response, err = search.SearchReporisitories(queryString, 100)
+		response, err = search.SearchFiles(queryString, "", 50)
 		if err != nil {
 			log.Fatalf("Error searching documents: %v", err)
 			return nil, err

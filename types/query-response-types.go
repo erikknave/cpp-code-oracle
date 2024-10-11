@@ -191,8 +191,9 @@ type ContainerAgentQueryResponseCodeblock struct {
 }
 
 type RepoListQueryResult struct {
-	Name string `json:"name"`
-	Dbid int    `json:"dbid"`
+	Name    string `json:"name"`
+	Dbid    int    `json:"dbid"`
+	Summary string `json:"summary"`
 }
 
 type ListFilesResponseResult struct {
