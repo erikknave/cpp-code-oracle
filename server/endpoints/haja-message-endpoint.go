@@ -3,6 +3,7 @@ package endpoints
 import (
 	"context"
 	_ "embed"
+	"fmt"
 	"log"
 	"os"
 
@@ -17,7 +18,8 @@ func HajaMessageEndpoint(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusUnauthorized).SendString("Unauthorized")
 	}
 	promptStr := c.FormValue("message")
-	username := "haja_user"
+	username := c.FormValue("thread_id")
+	fmt.Printf("Username/thread_id: %s\nd", username)
 	user, err := dbhelpers.LoadUserFromUserName(username)
 	if err != nil {
 		log.Println("Error loading user:", err)

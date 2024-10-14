@@ -28,7 +28,7 @@ func ServerInit() {
 	app.Use(logger.New())
 	app.Use(redirect.New(redirect.Config{
 		Rules: map[string]string{
-			"/": "/stats",
+			"/": "/chat",
 		},
 		StatusCode: 301,
 	}))
