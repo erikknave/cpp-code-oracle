@@ -15,12 +15,17 @@ type User struct {
 
 type ChatMessage struct {
 	gorm.Model
-	Content      string    `json:"content"`
-	Role         string    `json:"role"`
-	Date         time.Time `json:"date"`
-	UserID       uint      `json:"user_id"`
-	User         User      `json:"user" gorm:"constraint:OnDelete:CASCADE;"`
-	HideFromUser bool      `json:"hide_from_user"`
+	Content        string             `json:"content"`
+	Role           string             `json:"role"`
+	Date           time.Time          `json:"date"`
+	UserID         uint               `json:"user_id"`
+	User           User               `json:"user" gorm:"constraint:OnDelete:CASCADE;"`
+	HideFromUser   bool               `json:"hide_from_user"`
+	MessageContext ChatMessageContext `json:"message_context"`
+}
+
+type ChatMessageContext struct {
+	MentionedFiles []string `json:"mentioned_files"`
 }
 
 type ChatMessagePacket struct {
