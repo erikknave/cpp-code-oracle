@@ -13,7 +13,7 @@ import (
 	"github.com/tmc/langchaingo/llms/openai"
 )
 
-func GenerateResponse(content []llms.MessageContent, functionCalls []types.FunctionCall, model string, chatMessageHistory []types.ChatMessage, user *types.User) (string, []llms.MessageContent, []types.ChatMessage, error) {
+func GenerateResponse(content []llms.MessageContent, functionCalls []types.FunctionCall, model string, chatMessageHistory []types.ChatMessage, user *types.User, toolContext *types.ToolContext) (string, []llms.MessageContent, []types.ChatMessage, error) {
 	var err error
 	hostMode := os.Getenv("AI_HOST_MODE")
 	var llm *openai.LLM
@@ -70,7 +70,7 @@ func GenerateResponse(content []llms.MessageContent, functionCalls []types.Funct
 	for {
 		var executedContent []llms.MessageContent
 		var toolExecuted bool
-		executedContent, chatMessageHistory, toolExecuted = executeToolCalls(content, functionCalls, completion, chatMessageHistory, user)
+		executedContent, chatMessageHistory, toolExecuted = executeToolCalls(content, functionCalls, completion, chatMessageHistory, user, toolContext)
 		if !toolExecuted {
 			break
 		}
@@ -97,7 +97,7 @@ func updateMessageHistory(messageHistory []llms.MessageContent, resp *llms.Conte
 	return append(messageHistory, assistantResponse)
 }
 
-func executeToolCalls(messageHistory []llms.MessageContent, tools []types.FunctionCall, resp *llms.ContentResponse, chatMessageHistory []types.ChatMessage, user *types.User) ([]llms.MessageContent, []types.ChatMessage, bool) {
+func executeToolCalls(messageHistory []llms.MessageContent, tools []types.FunctionCall, resp *llms.ContentResponse, chatMessageHistory []types.ChatMessage, user *types.User, toolContext *types.ToolContext) ([]llms.MessageContent, []types.ChatMessage, bool) {
 	fmt.Println("Executing", len(resp.Choices[0].ToolCalls), "tool calls")
 	fmt.Println("Executing the following tool calls: " + fmt.Sprint(resp.Choices[0].ToolCalls))
 
@@ -115,7 +115,7 @@ func executeToolCalls(messageHistory []llms.MessageContent, tools []types.Functi
 			log.Fatalf("Unsupported tool: %s", toolCall.FunctionCall.Name)
 		}
 		fmt.Printf(" - Executing tool: %s\n", toolCall.FunctionCall.Name)
-		response, err := tool.Execute(json.RawMessage(toolCall.FunctionCall.Arguments))
+		response, err := tool.Execute(json.RawMessage(toolCall.FunctionCall.Arguments), toolContext)
 		toolExecuted = true
 		if err != nil {
 			log.Fatal(err)

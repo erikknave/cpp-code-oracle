@@ -58,7 +58,7 @@ func (f *FunctionCall) ToolDefinition() llms.Tool {
 	}
 }
 
-func (f *FunctionCall) Execute(args json.RawMessage) (string, error) {
+func (f *FunctionCall) Execute(args json.RawMessage, tCtx *types.ToolContext) (string, error) {
 	fmt.Printf("\n - Execute function %s called\n", name)
 	var params struct {
 		Query string `json:"query"`
@@ -66,7 +66,7 @@ func (f *FunctionCall) Execute(args json.RawMessage) (string, error) {
 	if err := json.Unmarshal(args, &params); err != nil {
 		return "", err
 	}
-	return f.Function(params.Query), nil
+	return f.Function(params.Query, tCtx), nil
 }
 
 const responseTemplate = `
@@ -79,7 +79,7 @@ The following files were found (presented by relevance):
 {{end}}
 `
 
-func (f *FunctionCall) Function(query string) string {
+func (f *FunctionCall) Function(query string, tCtx *types.ToolContext) string {
 	searchDocs := pgvector.PerformFileQuery(query, 10)
 	if len(searchDocs) == 0 {
 		return "No files found with the provided query"
@@ -95,7 +95,9 @@ func (f *FunctionCall) Function(query string) string {
 	if err != nil {
 		return fmt.Sprintf("Error in tmpl.Execute: %v", err)
 	}
-
+	for _, doc := range searchDocs {
+		tCtx.MentionedFiles = append(tCtx.MentionedFiles, doc.Path)
+	}
 	response := result.String()
 	return response
 }

@@ -56,7 +56,7 @@ func (f *FunctionCall) ToolDefinition() llms.Tool {
 	}
 }
 
-func (f *FunctionCall) Execute(args json.RawMessage) (string, error) {
+func (f *FunctionCall) Execute(args json.RawMessage, tCtx *types.ToolContext) (string, error) {
 	fmt.Printf("\n - Execute function %s called\n", name)
 	var params struct {
 		FileSearchId string `json:"fileSearchId"`

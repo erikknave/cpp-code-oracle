@@ -15,17 +15,18 @@ type User struct {
 
 type ChatMessage struct {
 	gorm.Model
-	Content        string             `json:"content"`
-	Role           string             `json:"role"`
-	Date           time.Time          `json:"date"`
-	UserID         uint               `json:"user_id"`
-	User           User               `json:"user" gorm:"constraint:OnDelete:CASCADE;"`
-	HideFromUser   bool               `json:"hide_from_user"`
-	MessageContext ChatMessageContext `json:"message_context"`
+	Content      string    `json:"content"`
+	Role         string    `json:"role"`
+	Date         time.Time `json:"date"`
+	UserID       uint      `json:"user_id"`
+	User         User      `json:"user" gorm:"constraint:OnDelete:CASCADE;"`
+	HideFromUser bool      `json:"hide_from_user"`
+	Context      string    `json:"context"`
 }
 
-type ChatMessageContext struct {
-	MentionedFiles []string `json:"mentioned_files"`
+type FileContent struct {
+	Content  string `json:"content"`
+	FilePath string `json:"file_path"`
 }
 
 type ChatMessagePacket struct {
@@ -50,8 +51,12 @@ type AgentDescription struct {
 
 type FunctionCall interface {
 	Name() string
-	Execute(args json.RawMessage) (string, error)
+	Execute(args json.RawMessage, toolContext *ToolContext) (string, error)
 	ToolDefinition() llms.Tool
+}
+
+type ToolContext struct {
+	MentionedFiles []string `json:"mentioned_files"`
 }
 
 type SearchableDocument struct {

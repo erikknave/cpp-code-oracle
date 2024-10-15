@@ -2,6 +2,8 @@ package agents
 
 import (
 	"bytes"
+	"encoding/json"
+	"fmt"
 	"log"
 	"text/template"
 	"time"
@@ -67,7 +69,7 @@ func (a *BaseAgent) InvokeBaseAgent(templateData interface{}, messageHistory []t
 		a.Messages = messageHistory
 	}
 	// a.SystemMessage = a.AgentDescription.SystemMessage
-
+	var toolContext types.ToolContext
 	promptTemplate := a.AgentDescription.PromptTemplate
 	tmpl, err := template.New("prompt").Parse(promptTemplate)
 	if err != nil {
@@ -101,16 +103,23 @@ func (a *BaseAgent) InvokeBaseAgent(templateData interface{}, messageHistory []t
 	messages = append(messages, llms.TextParts(llms.ChatMessageTypeHuman, prompt))
 	var content string
 
-	content, _, a.Messages, err = languagemodel.GenerateResponse(messages, a.FunctionCalls, a.AgentDescription.Model, a.Messages, user)
+	content, _, a.Messages, err = languagemodel.GenerateResponse(messages, a.FunctionCalls, a.AgentDescription.Model, a.Messages, user, &toolContext)
 	if err != nil || len(content) == 0 {
 		return "", nil, err
 	}
+	toolContextBytes, err := json.Marshal(toolContext)
+	if err != nil {
+		fmt.Println("Error marshaling to JSON:", err)
+
+	}
+	toolContextString := string(toolContextBytes)
 
 	a.Messages = append(a.Messages, types.ChatMessage{
 		User:    *user,
 		Role:    "assistant",
 		Content: content,
 		Date:    time.Now(),
+		Context: toolContextString,
 	})
 
 	return content, a.Messages, nil
