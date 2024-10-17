@@ -21,6 +21,8 @@ func HajaMessageEndpoint(c *fiber.Ctx) error {
 	}
 	promptStr := c.FormValue("message")
 	username := c.FormValue("thread_id")
+	apiVersion := c.FormValue("api_version")
+	fmt.Println("API Version:", apiVersion)
 	fmt.Printf("Username/thread_id: %s\n", username)
 	user, err := dbhelpers.LoadUserFromUserName(username)
 	if err != nil || user.ID == 0 {
@@ -54,6 +56,10 @@ func HajaMessageEndpoint(c *fiber.Ctx) error {
 			Content:  content,
 		})
 	}
+	if apiVersion == "" {
+		return c.Status(fiber.StatusOK).SendString(response)
+	}
+
 	return c.JSON(fiber.Map{
 		"response": response,
 		"context":  tCtx,
